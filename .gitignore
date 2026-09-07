@@ -155,9 +155,6 @@ cython_debug/
 
 # DFT data
 tests/dft_data
-tests/data
-dft_local
-
 
 # VSCode
 .vscode
