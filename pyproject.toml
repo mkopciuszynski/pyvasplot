@@ -1,0 +1,48 @@
+
+[project]
+name = "pyvasplot"
+authors = [
+  { name="Marek Kopciuszynski", email="marek.Kopciuszynski@umcs.pl" },
+]
+description = "WASP data visualization tools"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Intended Audience :: Science/Research",
+]
+
+dependencies = [
+    "numpy>=1.21.0",
+    "scipy>=1.7.0",
+    "matplotlib>=3.4.2",
+    "dill>=0.3.4",
+]
+
+dynamic = ["version"]
+
+[build-system]
+requires = [
+    "setuptools>=61",
+    "wheel",
+    "build",
+    "setuptools_scm[toml]>=6.4"
+]
+build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "pytest",
+    "build",
+]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+local_scheme = "dirty-tag"
