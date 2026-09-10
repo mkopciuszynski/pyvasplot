@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from numpy.typing import NDArray
 
 from pyvasplot import PyVASP
-from pyvasplot.plotting.kpath import generate_labels, generate_path_bands
+from pyvasplot.plotting.path import generate_labels, generate_path_bands
 
 
 def plot_bands(
@@ -15,9 +15,9 @@ def plot_bands(
     k_mirror: bool = False,
     k_flip: bool = False,
     k_start: float = 0.0,
+    k_labels: bool = True,
     ek_min: float = -3.0,
     ek_max: float = 1.0,
-    k_labels: bool = True,
     ax: plt.Axes | None = None,
     attr: str = "k-",
     **kwargs,
@@ -69,9 +69,7 @@ def plot_bands(
 
     else:
         if k_section is not None:
-            raise ValueError(
-                "k_section can only be used with a path calculation."
-            )
+            raise ValueError("k_section can only be used with a path calculation.")
 
         kx, bands = _generate_line_bands(dft, k_norm)
         k_labels = False
@@ -85,22 +83,13 @@ def plot_bands(
     if ax is None:
         _, ax = plt.subplots()
 
-    ax.plot(
-        k_start + kx,
-        _shifted_energy(dft, bands),
-        attr,
-        **kwargs,
-    )
+    print(kx.shape)
+    ax.plot(k_start + kx, bands - dft.efermi - dft.eshift, attr, **kwargs)
 
     if k_mirror:
-        ax.plot(
-            k_start - kx,
-            _shifted_energy(dft, bands),
-            attr,
-            **kwargs,
-        )
+        ax.plot(k_start - kx, bands - dft.efermi - dft.eshift, attr, **kwargs)
 
-    ax.set_xlabel(r"$k$")
+    #ax.set_xlabel(r"$k$")
     ax.set_ylabel(r"$E - E_F$ (eV)")
     ax.set_ylim(ek_min, ek_max)
 

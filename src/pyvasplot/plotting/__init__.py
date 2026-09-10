@@ -1,5 +1,5 @@
 from pyvasplot.plotting.bands import plot_bands
-from pyvasplot.plotting.kpath import plot_kpath
+from pyvasplot.plotting.path import plot_path
 from pyvasplot.plotting.projections import (
     plot_bands_procar,
     plot_procar_map,
@@ -8,7 +8,7 @@ from pyvasplot.plotting.projections import (
 
 __all__ = [
     "plot_bands",
-    "plot_kpath",
+    "plot_path",
     "plot_bands_procar",
     "plot_procar_map",
     "plot_procar_scatter",

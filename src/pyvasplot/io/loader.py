@@ -48,6 +48,8 @@ def load(
 
     _save_cache(cache_path, data)
 
+    data.origin_dir = calculation_path
+
     return data
 
 
@@ -184,6 +186,7 @@ def _resolve_path_calculation(
 def _load_cache(cache_path: Path) -> VASPData:
     """Load VASP data from a local cache file."""
 
+    print("Loaded from cache")
     with cache_path.open("rb") as file:
         data = dill.load(file)
 
