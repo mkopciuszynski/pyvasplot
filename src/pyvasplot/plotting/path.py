@@ -7,7 +7,7 @@ from numpy.typing import NDArray
 from pyvasplot import PyVASP
 
 
-def plot_kpath(
+def plot_path(
     dft: PyVASP,
     ax: plt.Axes | None = None,
     inv_space_size: int = 3,
@@ -87,6 +87,7 @@ def generate_path_bands(
     kpts_cart = np.dot(kpts, reciprocal_lattice)
 
     nk_section = _get_nkpoints_section(dft)
+    print(nk_section)
 
     kx = _kx_for_sections(kpts_cart, nk_section)
 
@@ -126,28 +127,35 @@ def generate_labels(
 
     return x_labels_pos, labels
 
+def _get_nkpoints_section(dft: PyVASP) -> list[int]:
+    """
+    Return the number of k-points in each k-path section.
 
-def _get_nkpoints_section(dft: PyVASP) -> int:
-    """Return the number of k-points in one path section."""
-    # For now this is derived from the KPOINTS labels rather than
-    # requiring nkpoints_section to be another PyVASP property.
-    labels = dft.kpoints.labels
+    The section lengths are determined from the KPOINTS file rather than
+    the number of k-points parsed from PROCAR. This is important because
+    pymatgen's PROCAR parser may remove repeated k-points.
+    """
+    kpoints = dft.kpoints
 
-    if not labels:
-        raise ValueError("KPOINTS does not contain path labels.")
+    if kpoints.labels is None:
+        raise ValueError("KPOINTS does not contain k-point labels.")
 
-    n_sections = (len(labels) - 1) // 2
+    # Positions where a labelled k-point occurs.
+    label_indices = [
+        i for i, label in enumerate(kpoints.labels)
+        if label is not None
+    ]
 
-    if n_sections <= 0:
-        raise ValueError("Unable to determine k-path sections.")
-
-    if dft.nkpoints % n_sections != 0:
+    if len(label_indices) < 2:
         raise ValueError(
-            "Number of k-points is not divisible by the number "
-            "of k-path sections."
+            "At least two labelled k-points are required to define a path."
         )
 
-    return dft.nkpoints // n_sections
+    # Number of points belonging to each section.
+    return [
+        label_indices[i + 1] - label_indices[i]
+        for i in range(len(label_indices) - 1)
+    ]
 
 
 def _kx_for_sections(
