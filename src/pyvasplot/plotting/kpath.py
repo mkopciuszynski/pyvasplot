@@ -12,6 +12,7 @@ def plot_kpath(
     ax: plt.Axes | None = None,
     inv_space_size: int = 3,
     attr: str = "-b",
+    axis_limit: float = 2.0,
     **kwargs,
 ) -> plt.Axes:
     """Plot the k-point path in reciprocal space.
@@ -26,6 +27,9 @@ def plot_kpath(
         Number of reciprocal lattice translations to display.
     attr
         Matplotlib line style for the k-path.
+    axis_limit
+        Symmetric axis limit in reciprocal-space units. If None, it is
+        determined automatically from the plotted points.
     **kwargs
         Additional arguments passed to ``ax.plot``.
     """
@@ -46,20 +50,9 @@ def plot_kpath(
     ax.plot(0, 0, "or")
     ax.plot(kpts_cart[:, 0], kpts_cart[:, 1], attr, **kwargs)
 
-    # Set the view just beyond the closest non-zero reciprocal-lattice point
-    # to the origin, rather than extending it to the furthest point plotted.
-    reciprocal_points = np.column_stack((reciprocal_x, reciprocal_y))
-    reciprocal_distances = np.linalg.norm(reciprocal_points, axis=1)
-    nonzero_distances = reciprocal_distances[reciprocal_distances > 0]
-    max_limit = (
-        float(np.min(nonzero_distances)) * 1.2
-        if nonzero_distances.size
-        else 0.0
-    )
-
-    if max_limit > 0:
-        ax.set_xlim(-max_limit, max_limit)
-        ax.set_ylim(-max_limit, max_limit)
+    if axis_limit > 0:
+        ax.set_xlim(-axis_limit, axis_limit)
+        ax.set_ylim(-axis_limit, axis_limit)
 
     ax.set_aspect("equal", "box")
     ax.set_xlabel(r"$k_x$ (1/A)")
