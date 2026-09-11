@@ -46,7 +46,16 @@ def plot_kpath(
     ax.plot(0, 0, "or")
     ax.plot(kpts_cart[:, 0], kpts_cart[:, 1], attr, **kwargs)
 
-    max_limit = np.max(np.abs(kpts_cart[:, :2])) * 1.5
+    # Set the view just beyond the closest non-zero reciprocal-lattice point
+    # to the origin, rather than extending it to the furthest point plotted.
+    reciprocal_points = np.column_stack((reciprocal_x, reciprocal_y))
+    reciprocal_distances = np.linalg.norm(reciprocal_points, axis=1)
+    nonzero_distances = reciprocal_distances[reciprocal_distances > 0]
+    max_limit = (
+        float(np.min(nonzero_distances)) * 1.2
+        if nonzero_distances.size
+        else 0.0
+    )
 
     if max_limit > 0:
         ax.set_xlim(-max_limit, max_limit)
