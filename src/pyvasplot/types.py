@@ -1,4 +1,5 @@
 from enum import StrEnum
+from pathlib import Path
 
 
 class CalculationType(StrEnum):
@@ -15,7 +16,6 @@ class CalculationType(StrEnum):
 
     KXKY = "KXKY"
     SO_STATIC_KXKY = "SO_STATIC_KXKY"
-
 
     @property
     def is_path(self) -> bool:
@@ -44,6 +44,26 @@ class CalculationType(StrEnum):
         """Whether this calculation includes spin-orbit coupling."""
         return self in {
             CalculationType.SO_STATIC,
-            CalculationType.SO_STATIC_PATH,
+            CalculationType.SO_STATIC_KPATH,
             CalculationType.SO_STATIC_KXKY,
         }
+
+
+
+
+
+def infer_calculation_type(path: str | Path) -> CalculationType | None:
+    path = Path(path)
+
+    parts = {part.upper() for part in path.parts}
+
+    if "SO_STATIC" in parts:
+        return CalculationType.SO_STATIC
+
+    if "HSE06" in parts:
+        return CalculationType.HSE06
+
+    if "KXKY" in parts:
+        return CalculationType.KXKY
+
+    return None

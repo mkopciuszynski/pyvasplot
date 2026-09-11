@@ -16,8 +16,6 @@ class VASPData:
     kpoints: Kpoints | None = None
     structure: IStructure | None = None
 
-    origin_dir: Path | None = None
-
     # Used by calculations containing multiple related datasets,
     # such as kxky calculations.
     calculations: list["VASPData"] | None = field(default=None)

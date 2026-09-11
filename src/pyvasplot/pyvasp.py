@@ -10,27 +10,32 @@ from pyvasplot.types import CalculationType
 from pymatgen.electronic_structure.core import Spin
 
 
+from pathlib import Path
+
+from pyvasplot.types import CalculationType, infer_calculation_type
+
 
 class PyVASP:
-    """Interface to data produced by a VASP calculation."""
-
     def __init__(
         self,
         path: str | Path,
         name: str | None = None,
-        calculation_type: CalculationType | str = CalculationType.BS,
-        dataset: str | None = None,
-        parent: str | None = None,
+        calculation_type: CalculationType | str | None = None,
         local_dir: str | Path = "dft_local",
     ) -> None:
-        
         self.path = Path(path)
-        #TODO fix this
-        self.name = name #or _generate_name(self.path)
 
-        self.calculation_type = CalculationType(calculation_type)
-        self.dataset = dataset
-        self.parent = parent
+        #TODO fix this
+        self.name = name #or self._generate_name(str(path))
+
+        if calculation_type is None:
+            calculation_type = infer_calculation_type(self.path)
+
+        self.calculation_type = (
+            CalculationType(calculation_type)
+            if calculation_type is not None
+            else None
+        )
 
         self.local_dir = Path(local_dir)
         self.local_dir.mkdir(parents=True, exist_ok=True)
@@ -38,36 +43,18 @@ class PyVASP:
         self.data = VASPData()
 
         self._eshift = 0.0
-        self._selected_ky = 0
-
-
-        if not self.path.exists():
-            raise FileNotFoundError(
-                f"VASP data not found: {self.path}"
-            )
-
-        if not self.path.is_dir() and self.path.suffix.lower() != ".zip":
-            raise ValueError(
-                "VASP data must be a directory or a ZIP archive."
-            )
 
 
 
     def __str__(self):
         return f"\n \
-                origin dir: {str(self.origin_dir)} \n \
-                type: {str(self.calculation_type)} \n \
+                data path: {str(self.path)} \n \
+                calculation type: {str(self.calculation_type)} \n \
                 name: {self.name} \n \
-                eshift: {self.eshift}eV \n \
-                e-fermi: {self.efermi}eV"
+                eshift: {self.eshift} eV \n \
+                e-fermi: {self.efermi} eV"
 
-    @property
-    def origin_dir(self) -> Path:
-        """Directory from which the current calculation was loaded."""
-        if self.data.origin_dir is None:
-            raise RuntimeError("Calculation has not been loaded.")
 
-        return self.data.origin_dir
 
     @property
     def cache_path(self) -> Path:
@@ -79,11 +66,12 @@ class PyVASP:
 
         from pyvasplot.io.loader import load
 
+        if self.calculation_type is None:
+            raise RuntimeError("Calculation type could not be determined.")
+
         self.data = load(
             path=self.path,
             calculation_type=self.calculation_type,
-            dataset=self.dataset,
-            parent=self.parent,
             cache_path=self.cache_path,
             reload=reload,
         )
@@ -253,13 +241,13 @@ class PyVASP:
         )
     
 
-def _generate_name(dir: str) -> str:
-    dir = dir.replace("\\", "_")
+def _generate_name(path_str: str) -> str:
+    path_str = path_str.replace("\\", "_")
     # Pattern to match four-digit number and everything after it
     pattern = r"(\d{4})_(.*)"
-    match = re.search(pattern, dir)
+    match = re.search(pattern, path_str)
     if match:
         name = f"{match.group(1)}_{match.group(2)}"
     else:
-        name = dir
+        name = path_str
     return name

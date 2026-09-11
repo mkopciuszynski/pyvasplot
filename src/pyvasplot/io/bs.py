@@ -9,7 +9,7 @@ from pymatgen.io.vasp.outputs import Procar
 from pyvasplot.data import VASPData
 
 
-def load_standard(path: Path, calculation_type) -> VASPData:
+def load_bs(path: Path, calculation_type) -> VASPData:
 
     procar = Procar(path / "PROCAR")
 

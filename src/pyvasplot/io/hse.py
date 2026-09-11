@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from pyvasplot.data import VASPData
-from pyvasplot.io.standard import load_standard
+from pyvasplot.io.bs import load_bs
 
 
 def load_hse(
@@ -9,7 +9,7 @@ def load_hse(
     calculation_type,
 ) -> VASPData:
 
-    data = load_standard(
+    data = load_bs(
         path,
         calculation_type,
     )
