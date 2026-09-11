@@ -11,7 +11,7 @@ from pyvasplot.plotting.bands import _generate_line_bands, _shifted_energy
 from pyvasplot.plotting.kpath import generate_kpath_bands
 
 
-def plot_bands_procar(
+def plot_procar_bands(
     dft: PyVASP,
     ions: int | list[int],
     orbitals: str | list[str],
