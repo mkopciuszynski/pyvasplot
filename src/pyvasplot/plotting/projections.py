@@ -8,7 +8,7 @@ from numpy.typing import NDArray
 
 from pyvasplot import PyVASP
 from pyvasplot.plotting.bands import _generate_line_bands, _shifted_energy
-from pyvasplot.plotting.path import generate_path_bands
+from pyvasplot.plotting.kpath import generate_kpath_bands
 
 
 def plot_bands_procar(
@@ -281,7 +281,7 @@ def _prepare_projection_data(
     procar_data = dft.procar_data
 
     if dft.calculation_type.is_path:
-        kx, bands = generate_path_bands(
+        kx, bands = generate_kpath_bands(
             dft,
             k_norm=k_norm,
             k_section=k_section,

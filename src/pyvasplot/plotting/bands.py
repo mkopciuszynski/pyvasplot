@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from numpy.typing import NDArray
 
 from pyvasplot import PyVASP
-from pyvasplot.plotting.path import generate_labels, generate_path_bands
+from pyvasplot.plotting.kpath import generate_labels, generate_kpath_bands
 
 
 def plot_bands(
@@ -56,7 +56,7 @@ def plot_bands(
     x_label_pos: list[float] = []
 
     if dft.calculation_type.is_path:
-        kx, bands = generate_path_bands(
+        kx, bands = generate_kpath_bands(
             dft,
             k_norm=k_norm,
             k_section=k_section,

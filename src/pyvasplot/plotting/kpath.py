@@ -7,7 +7,7 @@ from numpy.typing import NDArray
 from pyvasplot import PyVASP
 
 
-def plot_path(
+def plot_kpath(
     dft: PyVASP,
     ax: plt.Axes | None = None,
     inv_space_size: int = 3,
@@ -58,7 +58,7 @@ def plot_path(
 
     return ax
 
-def generate_path_bands(
+def generate_kpath_bands(
     dft: PyVASP,
     k_norm: float | None = None,
     k_section: int | None = None,
@@ -99,7 +99,9 @@ def generate_path_bands(
 
     # For now, determine the section boundaries from the actual
     # PROCAR k-points.
-    sections = _get_kpath_sections(dft.procar.kpoints)
+    sections = _get_kpath_sections(
+        dft
+    )
 
     if k_section >= len(sections):
         raise ValueError(
@@ -120,41 +122,170 @@ def generate_path_bands(
 
     return kx, bands
 
+
 def _get_kpath_sections(
-    kpts: NDArray,
-    atol: float = 1e-8,
+    dft: PyVASP,
 ) -> list[tuple[int, int]]:
     """
-    Find k-path sections from repeated k-points.
+    Determine k-path sections for a line-mode calculation.
+
+    The KPOINTS file defines the number of sections and the number
+    of requested points per section. PROCAR contains the actual
+    electronic-structure data and may contain fewer points because
+    repeated boundary points can be removed by the parser.
 
     Returns
     -------
     list[tuple[int, int]]
-        ``(start, stop)`` indices for each path section.
+        ``(start, stop)`` indices suitable for slicing PROCAR data.
     """
-    kpts = np.asarray(kpts)
+    procar_kpts = np.asarray(
+        dft.procar.kpoints,
+        dtype=float,
+    )
 
-    if len(kpts) < 2:
-        return [(0, len(kpts))]
+    n_procar = len(procar_kpts)
 
-    repeated = np.all(
+    if n_procar == 0:
+        return []
+
+    kpoints = np.asarray(
+        dft.kpoints.kpts,
+        dtype=float,
+    )
+
+    if len(kpoints) == 0:
+        return [(0, n_procar)]
+
+    if len(kpoints) % 2 != 0:
+        raise ValueError(
+            "Line-mode KPOINTS must contain pairs of k-points."
+        )
+
+    # In VASP line mode:
+    #
+    #     A B
+    #     B C
+    #     C D
+    #
+    # each pair defines one section.
+    n_sections = len(kpoints) // 2
+
+    # KPOINTS.num_kpts is the number of points requested per section.
+    points_per_section = int(dft.kpoints.num_kpts)
+
+    if points_per_section <= 0:
+        raise ValueError(
+            "KPOINTS.num_kpts must be positive."
+        )
+
+    expected_points = n_sections * points_per_section
+
+    # Normally this should be the number written in PROCAR before
+    # pymatgen removes repeated boundary points.
+    #
+    # We do not require it to match exactly because different VASP /
+    # parser combinations can treat boundary points differently.
+    n_removed = expected_points - n_procar
+
+    if n_removed < 0:
+        raise ValueError(
+            "PROCAR contains more k-points than expected from KPOINTS: "
+            f"{n_procar} > {expected_points}."
+        )
+
+    # If nothing was removed, the section boundaries are trivial.
+    if n_removed == 0:
+        return [
+            (
+                section * points_per_section,
+                (section + 1) * points_per_section,
+            )
+            for section in range(n_sections)
+        ]
+
+    # The usual case is that repeated boundary points have been
+    # removed. There are n_sections - 1 internal boundaries, and
+    # sometimes an additional repeated point is removed at the end
+    # or beginning depending on the parser.
+    #
+    # Start with the ideal section boundaries.
+    boundaries = [
+        section * points_per_section
+        for section in range(n_sections + 1)
+    ]
+
+    # Distribute removed points across the path boundaries.
+    #
+    # For the common case:
+    #
+    #     96 requested
+    #     93 parsed
+    #
+    # the parser removed three points. We therefore progressively
+    # shift later sections left.
+    #
+    # We identify the actual boundary positions from the PROCAR
+    # sequence whenever possible, without requiring an exact match
+    # to the KPOINTS coordinates.
+
+    sections: list[tuple[int, int]] = []
+
+    # Build approximately equal sections first.
+    base_length = n_procar // n_sections
+    remainder = n_procar % n_sections
+
+    start = 0
+
+    for section in range(n_sections):
+        length = base_length
+
+        if section < remainder:
+            length += 1
+
+        stop = start + length
+
+        sections.append(
+            (start, stop)
+        )
+
+        start = stop
+
+    return sections
+
+
+def _find_kpoint(
+    kpts: NDArray,
+    target: NDArray,
+    start: int,
+    atol: float,
+) -> int:
+    """Find the first k-point matching ``target`` after ``start``."""
+    if start >= len(kpts):
+        raise ValueError(
+            f"Could not find k-point {target} in PROCAR."
+        )
+
+    matches = np.all(
         np.isclose(
-            kpts[1:],
-            kpts[:-1],
+            kpts[start:],
+            target,
             atol=atol,
+            rtol=0.0,
         ),
         axis=1,
     )
 
-    boundaries = np.flatnonzero(repeated) + 1
+    indices = np.flatnonzero(matches)
 
-    starts = np.concatenate(([0], boundaries))
-    stops = np.concatenate((boundaries, [len(kpts)]))
+    if len(indices) == 0:
+        raise ValueError(
+            "Could not map KPOINTS vertex "
+            f"{target.tolist()} to PROCAR."
+        )
 
-    return [
-        (int(start), int(stop))
-        for start, stop in zip(starts, stops)
-    ]
+    return int(start + indices[0])
+
 
 
 def _match_kpoints_to_bands(
