@@ -28,7 +28,10 @@ class PyVASP:
         self.path = Path(path)
         self.subpath = Path(subpath) if subpath is not None else None
 
-        self.name = name or _generate_name(str(path), str(subpath))
+        self.name = name or _generate_name(
+            str(path),
+            str(subpath) if subpath is not None else None,
+        )
 
         if calculation_type is None:
             calculation_type = infer_calculation_type(
@@ -46,8 +49,6 @@ class PyVASP:
 
         self.data = VASPData()
         self._eshift = 0.0
-
-
 
 
 
@@ -70,17 +71,52 @@ class PyVASP:
 
 
     def __str__(self):
-        return f"\n \
-                data path: {str(self.path)} \n \
-                calculation type: {str(self.calculation_type)} \n \
-                name: {self.name} \n \
-                eshift: {self.eshift} eV \n \
-                e-fermi: {self.efermi} eV"
+        lines = [
+            f"PyVASP: {self.name}",
+            f"  data path: {self.full_data_path}",
+            f"  calculation type: {self.calculation_type or '-'}",
+            f"  model number: {self.model_number}",
+            f"  e-fermi: {self.efermi}eV",
+            f"  eshift: {self.eshift} eV",
+        ] 
+            
+        return "\n".join(lines)
+
+    def __repr__(self) -> str:
+        return (
+            f"{type(self).__name__}("
+            f"data_path={self.full_data_path!r}, "
+            f"calculation_type={self.calculation_type!r}, "
+            f"cache_path={self.full_cache_path!r})"
+        )
+
+    @property
+    def full_path(self) -> Path:
+        """Absolute path to the input directory or ZIP archive."""
+        return self.path.resolve()
+
+    @property
+    def full_data_path(self) -> Path:
+        """Absolute path to the calculation, including its subpath."""
+        if self.subpath is None:
+            return self.full_path
+
+        return (self.full_path / self.subpath).resolve()
+
+    @property
+    def full_local_dir(self) -> Path:
+        """Absolute path to the local cache directory."""
+        return self.local_dir.resolve()
 
     @property
     def cache_path(self) -> Path:
         """Path to the local cache file."""
         return self.local_dir / f"{self.name}.pkl"
+
+    @property
+    def full_cache_path(self) -> Path:
+        """Absolute path to the local cache file."""
+        return self.cache_path.resolve()
 
 
 

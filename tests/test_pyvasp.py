@@ -159,6 +159,28 @@ class TestPyVASP(unittest.TestCase):
 
         self.assert_bs_path_data(cached_dft)
 
+    def test_paths_and_representations(self):
+        """Expose absolute paths and safe object representations."""
+
+        dft = PyVASP(
+            self.test_data_zip,
+            subpath="BS_MGKM",
+            calculation_type="BS_KPATH",
+            local_dir=self.cache_dir,
+        )
+
+        self.assertTrue(dft.full_path.is_absolute())
+        self.assertEqual(
+            dft.full_data_path,
+            dft.full_path / "BS_MGKM",
+        )
+        self.assertTrue(dft.full_local_dir.is_absolute())
+        self.assertTrue(dft.full_cache_path.is_absolute())
+        self.assertNotIn("_None", dft.name)
+        self.assertIn(str(dft.full_data_path), str(dft))
+        self.assertIn(str(dft.full_cache_path), str(dft))
+        self.assertIn("PyVASP(", repr(dft))
+
     def test_invalid_path(self):
         """An invalid input path should raise an appropriate error."""
 
