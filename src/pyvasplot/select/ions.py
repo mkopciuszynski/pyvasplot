@@ -5,7 +5,7 @@ import numpy as np
 from pyvasplot import PyVASP
 
 
-def by_name(dft: PyVASP, ion_name: str) -> np.ndarray:
+def by_name(dft: PyVASP, ion_name: str) -> tuple[int, ...]:
     """
     Return ion indices matching a chemical element symbol.
 

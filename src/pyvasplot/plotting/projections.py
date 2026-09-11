@@ -13,8 +13,8 @@ from pyvasplot.plotting.kpath import generate_kpath_bands
 
 def plot_procar_bands(
     dft: PyVASP,
-    ions: int | list[int],
-    orbitals: str | list[str],
+    ions: int | tuple[int],
+    orbitals: str | tuple[str],
     k_section: int | None = None,
     k_norm: float | None = None,
     k_mirror: bool = False,
@@ -87,8 +87,8 @@ def plot_procar_bands(
 
 def plot_procar_map(
     dft: PyVASP,
-    ions: int | list[int],
-    orbitals: str | list[str],
+    ions: int | tuple[int],
+    orbitals: str | tuple[str],
     k_section: int | None = None,
     k_norm: float = 1.0,
     k_mirror: bool = False,
@@ -178,8 +178,8 @@ def plot_procar_map(
 
 def plot_procar_scatter(
     dft: PyVASP,
-    ions: int | list[int],
-    orbitals: str | list[str],
+    ions: int | tuple[int],
+    orbitals: str | tuple[str],
     k_section: int | None = None,
     k_norm: float = 1.0,
     k_mirror: bool = False,
