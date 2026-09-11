@@ -16,8 +16,8 @@ def plot_bands(
     k_flip: bool = False,
     k_start: float = 0.0,
     k_labels: bool = True,
-    ek_min: float = -3.0,
-    ek_max: float = 1.0,
+    e_min: float = -3.0,
+    e_max: float = 1.0,
     ax: plt.Axes | None = None,
     attr: str = "k-",
     **kwargs,
@@ -41,7 +41,7 @@ def plot_bands(
         Reverse the order of k-points.
     k_start
         Starting position of the plotted k-axis.
-    ek_min, ek_max
+    e_min, e_max
         Energy-axis limits relative to the Fermi level.
     k_labels
         Show k-point labels for complete path plots.
@@ -71,7 +71,7 @@ def plot_bands(
         if k_section is not None:
             raise ValueError("k_section can only be used with a path calculation.")
 
-        kx, bands = _generate_line_bands(dft, k_norm)
+        kx, bands = generate_line_bands(dft, k_norm)
         k_labels = False
 
     if k_flip:
@@ -92,7 +92,7 @@ def plot_bands(
 
     #ax.set_xlabel(r"$k$")
     ax.set_ylabel(r"$E - E_F$ (eV)")
-    ax.set_ylim(ek_min, ek_max)
+    ax.set_ylim(e_min, e_max)
 
     if k_labels:
         ax.set_xlim(kx.min(), kx.max())
@@ -101,7 +101,7 @@ def plot_bands(
     return ax
 
 
-def _generate_line_bands(
+def generate_line_bands(
     dft: PyVASP,
     k_norm: float | None,
 ) -> tuple[NDArray, NDArray]:
@@ -112,3 +112,14 @@ def _generate_line_bands(
     kx = np.linspace(0, k_norm, dft.nkpoints)
 
     return kx, dft.eigenvalues
+
+
+def shifted_energy(
+    dft: PyVASP,
+    bands: NDArray,
+) -> NDArray:
+    """Convert absolute band energies to energy relative to the Fermi level."""
+    if dft.efermi is None:
+        raise ValueError("Fermi energy was not loaded.")
+
+    return bands - dft.efermi - dft.eshift

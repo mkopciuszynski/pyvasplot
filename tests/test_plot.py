@@ -38,8 +38,8 @@ class TestPlot(unittest.TestCase):
         """The plot should contain one line for every band."""
         ax = plot_bands(
             self.dft,
-            ek_min=-50,
-            ek_max=50,
+            e_min=-50,
+            e_max=50,
         )
 
         self.assertEqual(
@@ -51,8 +51,8 @@ class TestPlot(unittest.TestCase):
         """The x coordinates should contain all k-points."""
         ax = plot_bands(
             self.dft,
-            ek_min=-50,
-            ek_max=50,
+            e_min=-50,
+            e_max=50,
         )
 
         x_data = ax.lines[0].get_xdata()
@@ -75,8 +75,8 @@ class TestPlot(unittest.TestCase):
         """The plotted energies should equal E - EF - eshift."""
         ax = plot_bands(
             self.dft,
-            ek_min=-50,
-            ek_max=50,
+            e_min=-50,
+            e_max=50,
         )
 
         y_data = ax.lines[0].get_ydata()
@@ -96,8 +96,8 @@ class TestPlot(unittest.TestCase):
         """Check several individual band energies."""
         ax = plot_bands(
             self.dft,
-            ek_min=-50,
-            ek_max=50,
+            e_min=-50,
+            e_max=50,
         )
 
         y_data = ax.lines[0].get_ydata()
@@ -118,8 +118,8 @@ class TestPlot(unittest.TestCase):
         """The requested energy limits should be applied to the axes."""
         ax = plot_bands(
             self.dft,
-            ek_min=-50,
-            ek_max=50,
+            e_min=-50,
+            e_max=50,
         )
 
         self.assertEqual(

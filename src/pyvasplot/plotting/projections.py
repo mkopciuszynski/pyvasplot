@@ -7,7 +7,7 @@ from scipy.interpolate import CubicSpline
 from numpy.typing import NDArray
 
 from pyvasplot import PyVASP
-from pyvasplot.plotting.bands import _generate_line_bands, _shifted_energy
+from pyvasplot.plotting.bands import generate_line_bands, shifted_energy
 from pyvasplot.plotting.kpath import generate_kpath_bands
 
 
@@ -19,8 +19,8 @@ def plot_procar_bands(
     k_norm: float | None = None,
     k_mirror: bool = False,
     k_flip: bool = False,
-    ek_min: float = -3.0,
-    ek_max: float = 1.0,
+    e_min: float = -3.0,
+    e_max: float = 1.0,
     min_val: float = 0.01,
     norm_val: float = 0.1,
     ax: plt.Axes | None = None,
@@ -44,10 +44,10 @@ def plot_procar_bands(
     weight = (projection - min_val) * 1000 * norm_val
     valid = weight > 0
 
-    energy = _shifted_energy(dft, bands)
+    energy = shifted_energy(dft, bands)
 
-    valid &= energy > ek_min
-    valid &= energy < ek_max
+    valid &= energy > e_min
+    valid &= energy < e_max
 
     kx_mat = np.repeat(kx, dft.nbands).reshape(
         len(kx),
@@ -80,7 +80,7 @@ def plot_procar_bands(
 
     ax.set_xlabel(r"$k$")
     ax.set_ylabel(r"$E - E_F$ (eV)")
-    ax.set_ylim(ek_min, ek_max)
+    ax.set_ylim(e_min, e_max)
 
     return ax
 
@@ -93,8 +93,8 @@ def plot_procar_map(
     k_norm: float = 1.0,
     k_mirror: bool = False,
     k_flip: bool = False,
-    ek_min: float = -3.0,
-    ek_max: float = 1.0,
+    e_min: float = -3.0,
+    e_max: float = 1.0,
     ek_size: int = 256,
     lorentz_width: float = 0.04,
     interp_k: int = 2,
@@ -122,8 +122,8 @@ def plot_procar_map(
         kx,
         bands,
         projection,
-        ek_min,
-        ek_max,
+        e_min,
+        e_max,
         ek_size,
         lorentz_width,
     )
@@ -157,7 +157,7 @@ def plot_procar_map(
             cmap=cmap,
             aspect="auto",
             origin="lower",
-            extent=(-k_norm, k_norm, ek_min, ek_max),
+            extent=(-k_norm, k_norm, e_min, e_max),
             **kwargs,
         )
     else:
@@ -166,7 +166,7 @@ def plot_procar_map(
             cmap=cmap,
             aspect="auto",
             origin="lower",
-            extent=(0, k_norm, ek_min, ek_max),
+            extent=(0, k_norm, e_min, e_max),
             **kwargs,
         )
 
@@ -184,8 +184,8 @@ def plot_procar_scatter(
     k_norm: float = 1.0,
     k_mirror: bool = False,
     k_flip: bool = False,
-    ek_min: float = -3.0,
-    ek_max: float = 1.0,
+    e_min: float = -3.0,
+    e_max: float = 1.0,
     ek_size: int = 64,
     min_val: float = 0.01,
     norm_val: float = 0.5,
@@ -214,8 +214,8 @@ def plot_procar_scatter(
         kx,
         bands,
         projection,
-        ek_min,
-        ek_max,
+        e_min,
+        e_max,
         ek_size,
         lorentz_width,
     )
@@ -233,8 +233,8 @@ def plot_procar_scatter(
     )
 
     energy_vec = np.linspace(
-        ek_min,
-        ek_max,
+        e_min,
+        e_max,
         ek_size,
     )
 
@@ -294,7 +294,7 @@ def _prepare_projection_data(
             procar_data = procar_data[start:stop, :]
 
     else:
-        kx, bands = _generate_line_bands(
+        kx, bands = generate_line_bands(
             dft,
             k_norm,
         )
@@ -340,15 +340,15 @@ def _make_energy_map(
     kx: NDArray,
     bands: NDArray,
     projection: NDArray,
-    ek_min: float,
-    ek_max: float,
+    e_min: float,
+    e_max: float,
     ek_size: int,
     lorentz_width: float,
 ) -> NDArray:
     """Convert discrete bands into a Lorentzian-broadened map."""
     energy_vec = np.linspace(
-        ek_min,
-        ek_max,
+        e_min,
+        e_max,
         ek_size,
     )
 
@@ -356,7 +356,7 @@ def _make_energy_map(
         (len(kx), ek_size),
     )
 
-    shifted_bands = _shifted_energy(
+    shifted_bands = shifted_energy(
         dft,
         bands,
     )
@@ -365,7 +365,7 @@ def _make_energy_map(
         for ib in range(dft.nbands):
             energy = shifted_bands[ik, ib]
 
-            if ek_min < energy < ek_max:
+            if e_min < energy < e_max:
                 result[ik, :] += projection[ik, ib] / (
                     1 + ((energy_vec - energy) / lorentz_width) ** 2
                 )

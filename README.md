@@ -73,7 +73,7 @@ import matplotlib.pyplot as plt
 
 from pyvasplot.plotting import plot_bands, plot_kpath
 
-plot_bands(dft, ek_min=-5, ek_max=5)
+plot_bands(dft, e_min=-5, e_max=5)
 plt.show()
 ```
 
