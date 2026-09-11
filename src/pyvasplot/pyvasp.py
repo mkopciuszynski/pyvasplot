@@ -71,12 +71,14 @@ class PyVASP:
 
 
     def __str__(self):
+        efermi = self.outcar.efermi if self.outcar is not None else "-"
         lines = [
             f"PyVASP: {self.name}",
             f"  data path: {self.full_data_path}",
             f"  calculation type: {self.calculation_type or '-'}",
             f"  model number: {self.model_number}",
-            f"  e-fermi: {self.efermi}eV",
+            f"  cache: {self.full_cache_path}",
+            f"  e-fermi: {efermi} eV",
             f"  eshift: {self.eshift} eV",
         ] 
             

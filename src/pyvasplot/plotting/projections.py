@@ -3,12 +3,14 @@ from __future__ import annotations
 import numpy as np
 import matplotlib.pyplot as plt
 
-from scipy.interpolate import CubicSpline
-from numpy.typing import NDArray
-
 from pyvasplot import PyVASP
-from pyvasplot.plotting.bands import generate_line_bands, shifted_energy
-from pyvasplot.plotting.kpath import generate_kpath_bands
+from pyvasplot.plotting._data import prepare_projection_data
+from pyvasplot.plotting._procar import (
+    interpolate_map,
+    make_energy_map,
+    project_procar,
+)
+from pyvasplot.plotting._data import shifted_energy
 
 
 def plot_procar_bands(
@@ -27,14 +29,14 @@ def plot_procar_bands(
     **kwargs,
 ) -> plt.Axes:
     """Plot projected band structure using PROCAR weights."""
-    kx, bands, procar_data = _prepare_projection_data(
+    kx, bands, procar_data = prepare_projection_data(
         dft,
         k_section=k_section,
         k_norm=k_norm,
         k_flip=k_flip,
     )
 
-    projection = _project_procar(
+    projection = project_procar(
         dft,
         procar_data,
         ions,
@@ -103,21 +105,21 @@ def plot_procar_map(
     **kwargs,
 ) -> plt.Axes:
     """Create an ARPES-like map from PROCAR projections."""
-    kx, bands, procar_data = _prepare_projection_data(
+    kx, bands, procar_data = prepare_projection_data(
         dft,
         k_section=k_section,
         k_norm=k_norm,
         k_flip=k_flip,
     )
 
-    projection = _project_procar(
+    projection = project_procar(
         dft,
         procar_data,
         ions,
         orbitals,
     )
 
-    procar_map = _make_energy_map(
+    procar_map = make_energy_map(
         dft,
         kx,
         bands,
@@ -134,7 +136,7 @@ def plot_procar_map(
         len(kx) * interp_k,
     )
 
-    procar_map_interp = _interpolate_map(
+    procar_map_interp = interpolate_map(
         kx,
         procar_map,
         kx_interp,
@@ -195,21 +197,21 @@ def plot_procar_scatter(
     **kwargs,
 ) -> plt.Axes:
     """Create a scatter-style ARPES map from PROCAR projections."""
-    kx, bands, procar_data = _prepare_projection_data(
+    kx, bands, procar_data = prepare_projection_data(
         dft,
         k_section=k_section,
         k_norm=k_norm,
         k_flip=k_flip,
     )
 
-    projection = _project_procar(
+    projection = project_procar(
         dft,
         procar_data,
         ions,
         orbitals,
     )
 
-    procar_map = _make_energy_map(
+    procar_map = make_energy_map(
         dft,
         kx,
         bands,
@@ -226,7 +228,7 @@ def plot_procar_scatter(
         len(kx) * interp_k,
     )
 
-    procar_map_interp = _interpolate_map(
+    procar_map_interp = interpolate_map(
         kx,
         procar_map,
         kx_interp,
@@ -271,140 +273,3 @@ def plot_procar_scatter(
     return ax
 
 
-def _prepare_projection_data(
-    dft: PyVASP,
-    k_section: int | None,
-    k_norm: float | None,
-    k_flip: bool,
-) -> tuple[NDArray, NDArray, NDArray]:
-    """Prepare k coordinates, bands and PROCAR data."""
-    procar_data = dft.procar_data
-
-    if dft.calculation_type.is_path:
-        kx, bands = generate_kpath_bands(
-            dft,
-            k_norm=k_norm,
-            k_section=k_section,
-        )
-
-        if k_section is not None:
-            nk = len(kx)
-            start = k_section * nk
-            stop = start + nk
-            procar_data = procar_data[start:stop, :]
-
-    else:
-        kx, bands = generate_line_bands(
-            dft,
-            k_norm,
-        )
-
-    if k_flip:
-        bands = np.flip(bands, axis=0)
-        procar_data = np.flip(procar_data, axis=0)
-
-    return kx, bands, procar_data
-
-
-def _project_procar(
-    dft: PyVASP,
-    procar_data: NDArray,
-    ions: int | list[int],
-    orbitals: str | list[str],
-) -> NDArray:
-    """Sum selected orbitals and average over selected ions."""
-    if isinstance(ions, int):
-        ions = [ions]
-
-    procar_orbitals = dft.procar.orbitals
-    orbital_indices = _orb_list_to_num(
-        procar_orbitals,
-        orbitals,
-    )
-
-    data = np.sum(
-        procar_data[:, :, :, orbital_indices],
-        axis=3,
-    )
-
-    data = np.mean(
-        data[:, :, ions],
-        axis=2,
-    )
-
-    return data
-
-
-def _make_energy_map(
-    dft: PyVASP,
-    kx: NDArray,
-    bands: NDArray,
-    projection: NDArray,
-    e_min: float,
-    e_max: float,
-    ek_size: int,
-    lorentz_width: float,
-) -> NDArray:
-    """Convert discrete bands into a Lorentzian-broadened map."""
-    energy_vec = np.linspace(
-        e_min,
-        e_max,
-        ek_size,
-    )
-
-    result = np.zeros(
-        (len(kx), ek_size),
-    )
-
-    shifted_bands = shifted_energy(
-        dft,
-        bands,
-    )
-
-    for ik in range(len(kx)):
-        for ib in range(dft.nbands):
-            energy = shifted_bands[ik, ib]
-
-            if e_min < energy < e_max:
-                result[ik, :] += projection[ik, ib] / (
-                    1 + ((energy_vec - energy) / lorentz_width) ** 2
-                )
-
-    return result
-
-
-def _interpolate_map(
-    kx: NDArray,
-    data: NDArray,
-    kx_interp: NDArray,
-) -> NDArray:
-    """Interpolate an energy map along the k direction."""
-    result = np.zeros(
-        (len(kx_interp), data.shape[1]),
-    )
-
-    for ie in range(data.shape[1]):
-        spline = CubicSpline(
-            kx,
-            data[:, ie],
-        )
-        result[:, ie] = spline(kx_interp)
-
-    return result
-
-
-def _orb_list_to_num(
-    orbitals: list[str],
-    orb_list: list[str] | str,
-) -> list[int]:
-    """Convert orbital names into PROCAR orbital indices."""
-    if isinstance(orb_list, str):
-        orb_list = [orb_list]
-
-    if not orb_list:
-        return list(range(len(orbitals)))
-
-    return [
-        orbitals.index(orbital)
-        for orbital in orb_list
-    ]

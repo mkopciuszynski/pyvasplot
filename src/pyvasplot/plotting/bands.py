@@ -6,6 +6,7 @@ from numpy.typing import NDArray
 
 from pyvasplot import PyVASP
 from pyvasplot.plotting.kpath import generate_labels, generate_kpath_bands
+from pyvasplot.plotting._data import generate_line_bands, shifted_energy
 
 
 def plot_bands(
@@ -83,8 +84,6 @@ def plot_bands(
     if ax is None:
         _, ax = plt.subplots()
 
-    print(kx.shape)
-
     ax.plot(k_start + kx, bands - dft.efermi - dft.eshift, attr, **kwargs)
 
     if k_mirror:
@@ -101,25 +100,9 @@ def plot_bands(
     return ax
 
 
-def generate_line_bands(
-    dft: PyVASP,
-    k_norm: float | None,
-) -> tuple[NDArray, NDArray]:
-    """Generate a linear k-axis for non-path calculations."""
-    if k_norm is None:
-        k_norm = dft.knorm
-
-    kx = np.linspace(0, k_norm, dft.nkpoints)
-
-    return kx, dft.eigenvalues
 
 
-def shifted_energy(
-    dft: PyVASP,
-    bands: NDArray,
-) -> NDArray:
-    """Convert absolute band energies to energy relative to the Fermi level."""
-    if dft.efermi is None:
-        raise ValueError("Fermi energy was not loaded.")
 
-    return bands - dft.efermi - dft.eshift
+
+
+
