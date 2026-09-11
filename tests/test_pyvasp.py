@@ -97,7 +97,7 @@ class TestPyVASP(unittest.TestCase):
         )
 
         dft.load(reload=True)
-
+        self.assertEqual(dft.cache_path.parent, self.cache_dir)
         self.assert_bs_path_data(dft)
 
     def test_load_so_static_from_directory(self):
@@ -111,6 +111,7 @@ class TestPyVASP(unittest.TestCase):
 
         dft.load(reload=True)
 
+        self.assertEqual(dft.cache_path.parent, self.cache_dir)
         self.assertIsNotNone(dft.procar)
         self.assertIsNotNone(dft.outcar)
         self.assertIsNotNone(dft.kpoints)

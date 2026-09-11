@@ -1,4 +1,5 @@
 import unittest
+import tempfile
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -18,15 +19,19 @@ class TestPlot(unittest.TestCase):
         cls.test_data_dir = DATA_DIR / "Sb_111_GGA_0014"
 
     def setUp(self):
+        self._tmp_dir = tempfile.TemporaryDirectory()
+        self.cache_dir = Path(self._tmp_dir.name) / "dft_local"
         self.dft = PyVASP(
             self.test_data_dir,
             calculation_type="BS_KPATH",
             subpath="BS_MGKM",
+            local_dir=self.cache_dir,
         )
         self.dft.load(reload=True)
 
     def tearDown(self):
         plt.close("all")
+        self._tmp_dir.cleanup()
 
 
     def test_plot_bands_contains_all_bands(self):

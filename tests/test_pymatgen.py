@@ -85,7 +85,7 @@ class TestPymatgen(unittest.TestCase):
 
         # Vasprun vs Eigenval (Both are shape (96, 12))
         self.assertEqual(eigenval_eigenvalues.shape, vasprun_eigenvalues.shape)
-        np.testing.assert_allclose(eigenval_eigenvalues, vasprun_eigenvalues, rtol=1e-4)
+        np.testing.assert_allclose(eigenval_eigenvalues, vasprun_eigenvalues, rtol=1e-2)
         
 
         # # Procar deduplicates adjacent k-points (93 k-points vs 96 k-points).

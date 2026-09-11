@@ -28,7 +28,7 @@ class PyVASP:
         self.path = Path(path)
         self.subpath = Path(subpath) if subpath is not None else None
 
-        self.name = name or self._generate_name()
+        self.name = name or _generate_name(str(path), str(subpath))
 
         if calculation_type is None:
             calculation_type = infer_calculation_type(
@@ -81,8 +81,6 @@ class PyVASP:
     def cache_path(self) -> Path:
         """Path to the local cache file."""
         return self.local_dir / f"{self.name}.pkl"
-
-
 
 
 
@@ -246,16 +244,20 @@ class PyVASP:
         raise ValueError(
             f"Could not find a four-digit model number in '{self.name}'."
         )
-    
 
-    def _generate_name(self) -> str:
-        path_str = str(self.path)
-        path_str = path_str.replace("\\", "_")
-        # Pattern to match four-digit number and everything after it
-        pattern = r"(\d{4})_(.*)"
-        match = re.search(pattern, path_str)
-        if match:
-            name = f"{match.group(1)}_{match.group(2)}"
-        else:
-            name = path_str
-        return name
+    
+def _generate_name(path: str, subpath: str | None = None) -> str:
+    normalized = path.replace("\\", "_").replace("/", "_")
+    normalized = normalized.replace(":", "_")
+
+    if subpath:
+        subpath = subpath.replace("\\", "_").replace("/", "_")
+        normalized = f"{normalized}_{subpath}"
+
+    pattern = r"(\d{4})_(.*)"
+    match = re.search(pattern, normalized)
+
+    if match:
+        return f"{match.group(1)}_{match.group(2)}"
+
+    return normalized
