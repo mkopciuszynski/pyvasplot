@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import re
 import numpy as np
 from numpy.typing import NDArray
 
@@ -21,15 +22,18 @@ class PyVASP:
         path: str | Path,
         name: str | None = None,
         calculation_type: CalculationType | str | None = None,
+        subpath: str | Path | None = None,
         local_dir: str | Path = "dft_local",
     ) -> None:
         self.path = Path(path)
+        self.subpath = Path(subpath) if subpath is not None else None
 
-        #TODO fix this
-        self.name = name #or self._generate_name(str(path))
+        self.name = name or self._generate_name()
 
         if calculation_type is None:
-            calculation_type = infer_calculation_type(self.path)
+            calculation_type = infer_calculation_type(
+                self.subpath or self.path
+            )
 
         self.calculation_type = (
             CalculationType(calculation_type)
@@ -41,9 +45,28 @@ class PyVASP:
         self.local_dir.mkdir(parents=True, exist_ok=True)
 
         self.data = VASPData()
-
         self._eshift = 0.0
 
+
+
+
+
+    def load(self, reload: bool = False) -> None:
+        if self.calculation_type is None:
+            raise ValueError(
+                "Could not determine the calculation type. "
+                "Please provide calculation_type explicitly."
+            )
+
+        from pyvasplot.io.loader import load
+
+        self.data = load(
+            path=self.path,
+            calculation_type=self.calculation_type,
+            cache_path=self.cache_path,
+            subpath=self.subpath,
+            reload=reload,
+        )
 
 
     def __str__(self):
@@ -54,27 +77,11 @@ class PyVASP:
                 eshift: {self.eshift} eV \n \
                 e-fermi: {self.efermi} eV"
 
-
-
     @property
     def cache_path(self) -> Path:
         """Path to the local cache file."""
         return self.local_dir / f"{self.name}.pkl"
 
-    def load(self, reload: bool = False) -> None:
-        """Load the selected VASP calculation."""
-
-        from pyvasplot.io.loader import load
-
-        if self.calculation_type is None:
-            raise RuntimeError("Calculation type could not be determined.")
-
-        self.data = load(
-            path=self.path,
-            calculation_type=self.calculation_type,
-            cache_path=self.cache_path,
-            reload=reload,
-        )
 
 
 
@@ -241,13 +248,14 @@ class PyVASP:
         )
     
 
-def _generate_name(path_str: str) -> str:
-    path_str = path_str.replace("\\", "_")
-    # Pattern to match four-digit number and everything after it
-    pattern = r"(\d{4})_(.*)"
-    match = re.search(pattern, path_str)
-    if match:
-        name = f"{match.group(1)}_{match.group(2)}"
-    else:
-        name = path_str
-    return name
+    def _generate_name(self) -> str:
+        path_str = str(self.path)
+        path_str = path_str.replace("\\", "_")
+        # Pattern to match four-digit number and everything after it
+        pattern = r"(\d{4})_(.*)"
+        match = re.search(pattern, path_str)
+        if match:
+            name = f"{match.group(1)}_{match.group(2)}"
+        else:
+            name = path_str
+        return name

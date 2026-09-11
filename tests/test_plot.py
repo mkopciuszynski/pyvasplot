@@ -20,8 +20,8 @@ class TestPlot(unittest.TestCase):
     def setUp(self):
         self.dft = PyVASP(
             self.test_data_dir,
-            calculation_type="BS_PATH",
-            dataset="BS_MGKM",
+            calculation_type="BS_KPATH",
+            subpath="BS_MGKM",
         )
         self.dft.load(reload=True)
 
