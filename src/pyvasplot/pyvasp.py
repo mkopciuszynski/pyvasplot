@@ -218,21 +218,14 @@ class PyVASP:
             self.structure.lattice.reciprocal_lattice.matrix
         )
 
-
     @property
-    def knorm(self) -> NDArray:
-        """
-        Cumulative k-path distance.
+    def knorm(self) -> float:
+        """Total cumulative k-path distance."""
 
-        The returned array has one value for each k-point in the KPOINTS file.
-        """
         kpts = self.kpts
 
-        if len(kpts) == 0:
-            return np.array([], dtype=float)
-
-        if len(kpts) == 1:
-            return np.array([0.0])
+        if len(kpts) < 2:
+            return 0.0
 
         kpts_cart = np.dot(kpts, self.cell_inverse)
 
@@ -241,9 +234,7 @@ class PyVASP:
             axis=1,
         )
 
-        return np.concatenate(
-            ([0.0], np.cumsum(distances))
-        )
+        return float(np.sum(distances))
 
 
     @property

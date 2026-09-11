@@ -84,6 +84,7 @@ def plot_bands(
         _, ax = plt.subplots()
 
     print(kx.shape)
+
     ax.plot(k_start + kx, bands - dft.efermi - dft.eshift, attr, **kwargs)
 
     if k_mirror:
@@ -111,14 +112,3 @@ def _generate_line_bands(
     kx = np.linspace(0, k_norm, dft.nkpoints)
 
     return kx, dft.eigenvalues
-
-
-def _shifted_energy(
-    dft: PyVASP,
-    bands: NDArray,
-) -> NDArray:
-    """Convert absolute band energies to E - EF with user shift."""
-    if dft.efermi is None:
-        raise ValueError("Fermi energy was not loaded.")
-
-    return bands - dft.efermi - dft.eshift
