@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 import matplotlib.pyplot as plt
+from collections.abc import Sequence
 
 from pyvasplot import PyVASP
 from pyvasplot.plotting._data import prepare_projection_data
@@ -15,8 +16,8 @@ from pyvasplot.plotting._data import shifted_energy
 
 def plot_procar_bands(
     dft: PyVASP,
-    ions: int | tuple[int],
-    orbitals: str | tuple[str],
+    ions: int | Sequence[int] | np.ndarray,
+    orbitals: str | Sequence[str],
     k_section: int | None = None,
     k_norm: float | None = None,
     k_mirror: bool = False,
@@ -89,10 +90,10 @@ def plot_procar_bands(
 
 def plot_procar_map(
     dft: PyVASP,
-    ions: int | tuple[int],
-    orbitals: str | tuple[str],
+    ions: int | Sequence[int] | np.ndarray,
+    orbitals: str | Sequence[str],
     k_section: int | None = None,
-    k_norm: float = 1.0,
+    k_norm: float | None = None,
     k_mirror: bool = False,
     k_flip: bool = False,
     e_min: float = -3.0,
@@ -141,6 +142,7 @@ def plot_procar_map(
         procar_map,
         kx_interp,
     )
+    k_extent = k_norm if k_norm is not None else float(kx.max())
 
     if ax is None:
         _, ax = plt.subplots(figsize=(6, 4))
@@ -159,7 +161,7 @@ def plot_procar_map(
             cmap=cmap,
             aspect="auto",
             origin="lower",
-            extent=(-k_norm, k_norm, e_min, e_max),
+            extent=(-k_extent, k_extent, e_min, e_max),
             **kwargs,
         )
     else:
@@ -168,7 +170,7 @@ def plot_procar_map(
             cmap=cmap,
             aspect="auto",
             origin="lower",
-            extent=(0, k_norm, e_min, e_max),
+            extent=(0, k_extent, e_min, e_max),
             **kwargs,
         )
 
@@ -180,10 +182,10 @@ def plot_procar_map(
 
 def plot_procar_scatter(
     dft: PyVASP,
-    ions: int | tuple[int],
-    orbitals: str | tuple[str],
+    ions: int | Sequence[int] | np.ndarray,
+    orbitals: str | Sequence[str],
     k_section: int | None = None,
-    k_norm: float = 1.0,
+    k_norm: float | None = None,
     k_mirror: bool = False,
     k_flip: bool = False,
     e_min: float = -3.0,

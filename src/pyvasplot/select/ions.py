@@ -18,8 +18,8 @@ def by_name(dft: PyVASP, ion_name: str) -> tuple[int, ...]:
 
     Returns
     -------
-    numpy.ndarray
-        Array containing the indices of the selected ions.
+    tuple[int, ...]
+        Tuple containing the indices of the selected ions.
     """
     return dft.structure.indices_from_symbol(ion_name)
 

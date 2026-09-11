@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
+from collections.abc import Sequence
 from numpy.typing import NDArray
 from scipy.interpolate import CubicSpline
 
@@ -11,11 +12,15 @@ from pyvasplot.plotting._data import shifted_energy
 def project_procar(
     dft: PyVASP,
     procar_data: NDArray,
-    ions: int | list[int] | tuple[int, ...],
-    orbitals: str | list[str] | tuple[str, ...],
+    ions: int | Sequence[int] | np.ndarray,
+    orbitals: str | Sequence[str],
 ) -> NDArray:
     """Sum selected orbitals and average over selected ions."""
-    selected_ions = [ions] if isinstance(ions, int) else list(ions)
+    if isinstance(ions, (int, np.integer)):
+        selected_ions = [int(ions)]
+    else:
+        selected_ions = list(ions)
+
     orbital_indices = orbital_indices_for(dft.procar.orbitals, orbitals)
 
     data = np.sum(
@@ -69,8 +74,8 @@ def interpolate_map(
 
 
 def orbital_indices_for(
-    orbitals: list[str],
-    selection: str | list[str] | tuple[str, ...],
+    orbitals: Sequence[str],
+    selection: str | Sequence[str],
 ) -> list[int]:
     """Convert selected orbital names into PROCAR orbital indices."""
     selected = [selection] if isinstance(selection, str) else list(selection)
