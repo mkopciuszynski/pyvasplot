@@ -13,8 +13,8 @@ from pyvasplot.plotting.kpath import generate_kpath_bands
 
 def plot_bands_procar(
     dft: PyVASP,
-    ion_list: list[int],
-    orb_list: list[str],
+    ions: int | list[int],
+    orbitals: str | list[str],
     k_section: int | None = None,
     k_norm: float | None = None,
     k_mirror: bool = False,
@@ -37,8 +37,8 @@ def plot_bands_procar(
     projection = _project_procar(
         dft,
         procar_data,
-        ion_list,
-        orb_list,
+        ions,
+        orbitals,
     )
 
     weight = (projection - min_val) * 1000 * norm_val
@@ -87,8 +87,8 @@ def plot_bands_procar(
 
 def plot_procar_map(
     dft: PyVASP,
-    ion_list: list[int],
-    orb_list: list[str],
+    ions: int | list[int],
+    orbitals: str | list[str],
     k_section: int | None = None,
     k_norm: float = 1.0,
     k_mirror: bool = False,
@@ -113,8 +113,8 @@ def plot_procar_map(
     projection = _project_procar(
         dft,
         procar_data,
-        ion_list,
-        orb_list,
+        ions,
+        orbitals,
     )
 
     procar_map = _make_energy_map(
@@ -178,8 +178,8 @@ def plot_procar_map(
 
 def plot_procar_scatter(
     dft: PyVASP,
-    ion_list: list[int],
-    orb_list: list[str],
+    ions: int | list[int],
+    orbitals: str | list[str],
     k_section: int | None = None,
     k_norm: float = 1.0,
     k_mirror: bool = False,
@@ -205,8 +205,8 @@ def plot_procar_scatter(
     projection = _project_procar(
         dft,
         procar_data,
-        ion_list,
-        orb_list,
+        ions,
+        orbitals,
     )
 
     procar_map = _make_energy_map(
@@ -309,14 +309,17 @@ def _prepare_projection_data(
 def _project_procar(
     dft: PyVASP,
     procar_data: NDArray,
-    ion_list: list[int],
-    orb_list: list[str],
+    ions: int | list[int],
+    orbitals: str | list[str],
 ) -> NDArray:
     """Sum selected orbitals and average over selected ions."""
-    orbitals = dft.procar.orbitals
+    if isinstance(ions, int):
+        ions = [ions]
+
+    procar_orbitals = dft.procar.orbitals
     orbital_indices = _orb_list_to_num(
+        procar_orbitals,
         orbitals,
-        orb_list,
     )
 
     data = np.sum(
@@ -325,7 +328,7 @@ def _project_procar(
     )
 
     data = np.mean(
-        data[:, :, ion_list],
+        data[:, :, ions],
         axis=2,
     )
 
