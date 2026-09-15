@@ -296,10 +296,6 @@ def plot_procar_kxky(
 ) -> plt.Axes:
     """Create a KXKY spectral map from PROCAR projections."""
 
-    if dft.calculation_type is not CalculationType.KXKY:
-        raise ValueError(
-            "plot_procar_kxky requires KXKY data."
-        )
 
     if dft.data.kxky is None:
         raise RuntimeError(

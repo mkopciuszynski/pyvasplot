@@ -29,7 +29,8 @@ class CalculationType(StrEnum):
     @property
     def is_kxky(self) -> bool:
         """Whether this is a kxky calculation."""
-        return self in {CalculationType.KXKY, CalculationType.SO_STATIC_KXKY}
+        return self in {CalculationType.KXKY, 
+                        CalculationType.SO_STATIC_KXKY}
 
     @property
     def is_hse(self) -> bool:

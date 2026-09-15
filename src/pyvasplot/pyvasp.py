@@ -242,7 +242,7 @@ class PyVASP:
     @property
     def nky(self) -> int:
         """Number of ky slices in KXKY data."""
-        if self.calculation_type is not CalculationType.KXKY:
+        if not self.calculation_type.is_kxky:
             raise ValueError("nky is only available for KXKY calculations.")
 
         if self.data.kxky is None:
@@ -254,7 +254,7 @@ class PyVASP:
     @property
     def selected_ky(self) -> int:
         """Currently selected ky slice."""
-        if self.calculation_type is not CalculationType.KXKY:
+        if not self.calculation_type.is_kxky:
             raise ValueError(
                 "selected_ky is only available for KXKY calculations."
             )
@@ -265,7 +265,7 @@ class PyVASP:
     @selected_ky.setter
     def selected_ky(self, ky: int) -> None:
         """Select a ky slice and expose its data through the main properties."""
-        if self.calculation_type is not CalculationType.KXKY:
+        if not self.calculation_type.is_kxky:
             raise ValueError(
                 "selected_ky is only available for KXKY calculations."
             )
