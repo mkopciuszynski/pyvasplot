@@ -33,9 +33,9 @@ def shifted_energy(
 
 def prepare_projection_data(
     dft: PyVASP,
-    k_section: int | None,
-    k_norm: float | None,
-    k_flip: bool,
+    k_section: int | None = None,
+    k_norm: float | None = None,
+    k_flip: bool = False,
 ) -> tuple[NDArray, NDArray, NDArray]:
     """Prepare coordinates, bands, and PROCAR data for projection plots."""
     procar_data = dft.procar_data

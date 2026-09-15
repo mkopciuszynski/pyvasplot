@@ -49,6 +49,7 @@ class PyVASP:
 
         self.data = VASPData()
         self._eshift = 0.0
+        self._selected_ky = 0
 
 
 
@@ -288,18 +289,28 @@ class PyVASP:
 
     @property
     def kynorm(self) -> float:
-        """Maximum Cartesian ky coordinate for the selected KXKY slice."""
+        """Maximum ky coordinate across the KXKY grid."""
+
         if not self.calculation_type.is_kxky:
             raise ValueError("kynorm is only available for KXKY data.")
 
-        kpts = self.kpts
+        if self.data.kxky is None:
+            raise RuntimeError("KXKY data has not been loaded.")
 
-        if len(kpts) == 0:
+        ky_values = []
+
+        for slice_data in self.data.kxky.slices:
+            kpts_cart = np.dot(
+                slice_data.kpoints.kpts,
+                self.cell_inverse,
+            )
+            ky_values.append(np.max(kpts_cart[:, 1]))
+
+        if not ky_values:
             return 0.0
 
-        kpts_cart = np.dot(kpts, self.cell_inverse)
+        return float(np.max(ky_values))
 
-        return float(np.max(kpts_cart[:, 1]))
     
     @property
     def model_number(self) -> str:

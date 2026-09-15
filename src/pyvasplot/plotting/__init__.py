@@ -4,6 +4,7 @@ from pyvasplot.plotting.projections import (
     plot_procar_bands,
     plot_procar_map,
     plot_procar_scatter,
+    plot_procar_kxky,
 )
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     "plot_procar_bands",
     "plot_procar_map",
     "plot_procar_scatter",
+    "plot_procar_kxky",
 ]
