@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from pyvasplot import PyVASP
-from pyvasplot.plotting import plot_bands
+from pyvasplot.plotting import plot_bands, plot_procar_bands
 
 
 DATA_DIR = Path(__file__).parent / "data"
@@ -126,6 +126,14 @@ class TestPlot(unittest.TestCase):
             ax.get_ylim(),
             (-50, 50),
         )
+
+    def test_plot_procar_bands_accepts_none_or_empty_selection(self):
+        """Default or empty ion/orbital selections should mean all entries."""
+        ax = plot_procar_bands(self.dft, ions=None, orbitals=None)
+        self.assertIsNotNone(ax)
+
+        ax = plot_procar_bands(self.dft, ions=[], orbitals=[])
+        self.assertIsNotNone(ax)
 
 
 if __name__ == "__main__":

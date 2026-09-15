@@ -12,14 +12,18 @@ from pyvasplot.plotting._data import shifted_energy
 def project_procar(
     dft: PyVASP,
     procar_data: NDArray,
-    ions: int | Sequence[int] | np.ndarray,
-    orbitals: str | Sequence[str],
+    ions: int | Sequence[int] | np.ndarray | None,
+    orbitals: str | Sequence[str] | None,
 ) -> NDArray:
     """Sum selected orbitals and average over selected ions."""
-    if isinstance(ions, (int, np.integer)):
+    if ions is None:
+        selected_ions = list(range(dft.nions))
+    elif isinstance(ions, (int, np.integer)):
         selected_ions = [int(ions)]
     else:
         selected_ions = list(ions)
+        if not selected_ions:
+            selected_ions = list(range(dft.nions))
 
     orbital_indices = orbital_indices_for(dft.procar.orbitals, orbitals)
 
@@ -75,10 +79,16 @@ def interpolate_map(
 
 def orbital_indices_for(
     orbitals: Sequence[str],
-    selection: str | Sequence[str],
+    selection: str | Sequence[str] | None,
 ) -> list[int]:
     """Convert selected orbital names into PROCAR orbital indices."""
-    selected = [selection] if isinstance(selection, str) else list(selection)
+    if selection is None:
+        return list(range(len(orbitals)))
+
+    if isinstance(selection, str):
+        selected = [selection]
+    else:
+        selected = list(selection)
 
     if not selected:
         return list(range(len(orbitals)))

@@ -60,7 +60,7 @@ def by_layer(
     if min_layer_distance <= 0:
         raise ValueError("min_layer_distance must be > 0")
 
-    ion_z = np.asarray(dft.structure.cart_coords[:, 2])
+    ion_z = np.asarray(dft.structure.cart_coords[:, 2], dtype=np.uint32)
 
     ion_indices = np.argsort(ion_z)
     z_sorted = np.sort(ion_z)
@@ -106,4 +106,4 @@ def by_layer(
     start = layer_boundaries[-layer - 1] + 1
     end = layer_boundaries[-layer] + 1
 
-    return ion_indices[start:end]
+    return np.sort(ion_indices[start:end])

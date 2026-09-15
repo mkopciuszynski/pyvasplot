@@ -16,8 +16,8 @@ from pyvasplot.plotting._data import shifted_energy
 
 def plot_procar_bands(
     dft: PyVASP,
-    ions: int | Sequence[int] | np.ndarray,
-    orbitals: str | Sequence[str],
+    ions: int | Sequence[int] | np.ndarray | None = None,
+    orbitals: str | Sequence[str] | None = None,
     k_section: int | None = None,
     k_norm: float | None = None,
     k_mirror: bool = False,
@@ -90,8 +90,8 @@ def plot_procar_bands(
 
 def plot_procar_map(
     dft: PyVASP,
-    ions: int | Sequence[int] | np.ndarray,
-    orbitals: str | Sequence[str],
+    ions: int | Sequence[int] | np.ndarray | None = None,
+    orbitals: str | Sequence[str] | None = None,
     k_section: int | None = None,
     k_norm: float | None = None,
     k_mirror: bool = False,
@@ -182,8 +182,8 @@ def plot_procar_map(
 
 def plot_procar_scatter(
     dft: PyVASP,
-    ions: int | Sequence[int] | np.ndarray,
-    orbitals: str | Sequence[str],
+    ions: int | Sequence[int] | np.ndarray | None = None,
+    orbitals: str | Sequence[str] | None = None,
     k_section: int | None = None,
     k_norm: float | None = None,
     k_mirror: bool = False,
