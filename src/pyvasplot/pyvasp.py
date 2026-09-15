@@ -238,30 +238,69 @@ class PyVASP:
 
         return float(np.sum(distances))
 
-
     @property
     def nky(self) -> int:
-        """Number of ky calculations for KXKY data."""
-        if not self.calculation_type.is_kxky:
-            raise ValueError("nky is only available for KXKY data.")
+        """Number of ky slices in KXKY data."""
+        if self.calculation_type is not CalculationType.KXKY:
+            raise ValueError("nky is only available for KXKY calculations.")
 
-        if self.data.calculations is None:
-            raise RuntimeError("KXKY calculations have not been loaded.")
+        if self.data.kxky is None:
+            raise RuntimeError("KXKY data has not been loaded.")
 
-        return len(self.data.calculations)
+        return self.data.kxky.nky
+
+
+    @property
+    def selected_ky(self) -> int:
+        """Currently selected ky slice."""
+        if self.calculation_type is not CalculationType.KXKY:
+            raise ValueError(
+                "selected_ky is only available for KXKY calculations."
+            )
+
+        return self._selected_ky
+
+
+    @selected_ky.setter
+    def selected_ky(self, ky: int) -> None:
+        """Select a ky slice and expose its data through the main properties."""
+        if self.calculation_type is not CalculationType.KXKY:
+            raise ValueError(
+                "selected_ky is only available for KXKY calculations."
+            )
+
+        if self.data.kxky is None:
+            raise RuntimeError("KXKY data has not been loaded.")
+
+        if not 0 <= ky < self.data.kxky.nky:
+            raise IndexError(
+                f"ky index {ky} is out of range. "
+                f"Valid range is 0-{self.data.kxky.nky - 1}."
+            )
+
+        selected = self.data.kxky.slices[ky]
+
+        self._selected_ky = ky
+        self.data.procar = selected.procar
+        self.data.outcar = selected.outcar
+        self.data.kpoints = selected.kpoints
 
 
     @property
     def kynorm(self) -> float:
-        """Maximum ky coordinate for KXKY data."""
+        """Maximum Cartesian ky coordinate for the selected KXKY slice."""
         if not self.calculation_type.is_kxky:
             raise ValueError("kynorm is only available for KXKY data.")
 
-        kpts_cart = np.dot(self.kpts, self.cell_inverse)
+        kpts = self.kpts
+
+        if len(kpts) == 0:
+            return 0.0
+
+        kpts_cart = np.dot(kpts, self.cell_inverse)
 
         return float(np.max(kpts_cart[:, 1]))
-
-
+    
     @property
     def model_number(self) -> str:
         """Return the four-digit model number from the calculation name."""

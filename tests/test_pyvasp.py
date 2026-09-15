@@ -17,6 +17,7 @@ class TestPyVASP(unittest.TestCase):
     def setUpClass(cls):
         cls.test_data_zip = DATA_DIR / "Sb_111_GGA_0014.zip"
         cls.test_data_dir = DATA_DIR / "Sb_111_GGA_0014"
+        cls.test_data_AuSi_zip = DATA_DIR / "AuSi2_hex_GGA_1171.zip"
 
     def setUp(self):
 
@@ -99,6 +100,21 @@ class TestPyVASP(unittest.TestCase):
         dft.load(reload=True)
         self.assertEqual(dft.cache_path.parent, self.cache_dir)
         self.assert_bs_path_data(dft)
+
+
+    def test_load_kxky_from_zip(self):
+        """Load a KPATH calculation from a ZIP archive."""
+
+        dft = PyVASP(
+            self.test_data_AuSi_zip,
+            subpath="BS_BZ",
+            calculation_type="KXKY",
+            local_dir=self.cache_dir,
+        )
+
+        dft.load(reload=True)
+        self.assertEqual(dft.cache_path.parent, self.cache_dir)
+        #self.assert_bs_path_data(dft)
 
     def test_load_so_static_from_directory(self):
         """Load an SO calculation from its concrete directory."""

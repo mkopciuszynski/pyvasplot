@@ -3,9 +3,9 @@ from pathlib import Path
 import dill
 
 from pyvasplot.data import VASPData
+from pyvasplot.io.source import DataSource
 from pyvasplot.io.hse import load_hse
 from pyvasplot.io.kxky import load_kxky
-from pyvasplot.io.source import DataSource
 from pyvasplot.io.bs import load_bs
 from pyvasplot.types import CalculationType
 
