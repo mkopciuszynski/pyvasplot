@@ -8,6 +8,8 @@ import numpy as np
 from pyvasplot import PyVASP
 from pyvasplot.plotting import plot_bands, plot_procar_bands
 from pyvasplot.plotting.kpath import generate_kpath_bands
+from pyvasplot.plotting.structure import plot_structure
+
 
 
 DATA_DIR = Path(__file__).parent / "data"
@@ -32,8 +34,13 @@ class TestPlot(unittest.TestCase):
 
     def tearDown(self):
         plt.close("all")
-        self._tmp_dir.cleanup()
 
+    def test_plot_structure(self):
+        axes = plot_structure(self.dft)
+
+        self.assertEqual(len(axes), 3)
+
+        axes[0].figure.clf()
 
     def test_plot_bands_contains_all_bands(self):
         """The plot should contain one line for every band."""
