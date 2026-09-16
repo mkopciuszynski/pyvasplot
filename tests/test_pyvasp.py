@@ -1,4 +1,3 @@
-import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -30,6 +29,41 @@ class TestPyVASP(unittest.TestCase):
 
     def assert_bs_path_data(self, dft: PyVASP):
         """Check the expected data loaded from the Sb KPATH calculation."""
+
+        procar = dft.procar
+        outcar = dft.outcar
+        kpoints = dft.kpoints
+        structure = dft.structure
+        self.assertIsNotNone(procar)
+        self.assertIsNotNone(outcar)
+        self.assertIsNotNone(kpoints)
+        self.assertIsNotNone(structure)
+
+        self.assertIs(dft.data.procar, procar)
+        self.assertIs(dft.data.outcar, outcar)
+        self.assertIs(dft.data.kpoints, kpoints)
+        self.assertIs(dft.data.structure, structure)
+
+        self.assertEqual(procar.nkpoints, 93)
+        self.assertEqual(procar.nbands, 12)
+        self.assertEqual(procar.orbitals, [
+            "s", "py", "pz", "px", "dxy", "dyz", "dz2", "dxz", "x2-y2"
+        ])
+        np.testing.assert_allclose(
+            procar.kpoints[0],
+            [0.5, 0.5, 0.0],
+        )
+        np.testing.assert_allclose(
+            procar.kpoints[-1],
+            [0.50538, 0.49462, 0.0],
+        )
+
+        self.assertEqual(kpoints.num_kpts, 32)
+        self.assertEqual(kpoints.labels, [
+            "M", "Gamma", "Gamma", "K", "K", "M"
+        ])
+        self.assertEqual(structure.composition.reduced_formula, "Sb")
+        self.assertEqual(len(structure), 2)
 
         efermi = dft.efermi
         if efermi is None:

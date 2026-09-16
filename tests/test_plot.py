@@ -7,6 +7,7 @@ import numpy as np
 
 from pyvasplot import PyVASP
 from pyvasplot.plotting import plot_bands, plot_procar_bands
+from pyvasplot.plotting.kpath import generate_kpath_bands
 
 
 DATA_DIR = Path(__file__).parent / "data"
@@ -47,6 +48,26 @@ class TestPlot(unittest.TestCase):
             self.dft.nbands,
         )
 
+    def test_plot_bands_uses_loaded_kpath_and_all_band_data(self):
+        """Every plotted line should use the loaded k-path and energies."""
+        ax = plot_bands(
+            self.dft,
+            e_min=-50,
+            e_max=50,
+        )
+
+        expected_kx, expected_bands = generate_kpath_bands(self.dft)
+
+        self.assertEqual(len(ax.lines), expected_bands.shape[1])
+        for band_index, line in enumerate(ax.lines):
+            np.testing.assert_allclose(np.asarray(line.get_xdata()), expected_kx)
+            np.testing.assert_allclose(
+                np.asarray(line.get_ydata()),
+                expected_bands[:, band_index]
+                - self.dft.efermi
+                - self.dft.eshift,
+            )
+
    
     def test_plot_bands_energy_values(self):
         """The plotted energies should equal E - EF - eshift."""
@@ -56,7 +77,7 @@ class TestPlot(unittest.TestCase):
             e_max=50,
         )
 
-        y_data = ax.lines[0].get_ydata()
+        y_data = np.asarray(ax.lines[0].get_ydata())
 
         expected = (
             self.dft.eigenvalues[:, 0]
@@ -77,7 +98,7 @@ class TestPlot(unittest.TestCase):
             e_max=50,
         )
 
-        y_data = ax.lines[0].get_ydata()
+        y_data = np.asarray(ax.lines[0].get_ydata())
 
         for index in [0, 1, 10, -1]:
             expected = (
