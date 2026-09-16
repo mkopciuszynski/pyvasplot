@@ -39,7 +39,7 @@ def plot_kpath(
     kpts_cart = np.dot(kpts, reciprocal_lattice)
 
     if ax is None:
-        _, ax = plt.subplots()
+        _, ax = plt.subplots(figsize=(3, 3))
 
     reciprocal_x, reciprocal_y = _reciprocal_lattice_points(
         reciprocal_lattice,
