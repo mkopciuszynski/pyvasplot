@@ -74,6 +74,48 @@ class TestPyVASP(unittest.TestCase):
             0.014,
         )
 
+    def assert_kxky_data(self, dft: PyVASP):
+        """Check the expected data loaded from the AuSi2 KXKY calculation."""
+
+        self.assertEqual(dft.nkpoints, 32)
+        self.assertEqual(dft.nbands, 78)
+        self.assertEqual(dft.nions, 26)
+
+        self.assertEqual(
+            dft.eigenvalues.shape,
+            (32, 78),
+        )
+
+        self.assertEqual(
+            dft.procar_data.shape,
+            (32, 78, 26, 9),
+        )
+
+        np.testing.assert_allclose(
+            dft.eigenvalues[0, 0],
+            -13.63450268,
+        )
+
+        self.assertAlmostEqual(
+            dft.procar_data[0, 0, 4, 0],
+            0.017,
+        )
+
+        self.assertAlmostEqual(
+            dft.procar_data[0, 0, 4, 2],
+            0.001,
+        )
+
+        self.assertAlmostEqual(
+            dft.procar_data[0, 0, 24, 0],
+            0.052,
+        )
+
+        self.assertAlmostEqual(
+            dft.procar_data[0, 0, 25, 6],
+            0.006,
+        )
+
     def test_load_kpath(self):
         """Load a KPATH calculation from its concrete directory."""
 
@@ -103,7 +145,7 @@ class TestPyVASP(unittest.TestCase):
 
 
     def test_load_kxky_from_zip(self):
-        """Load a KPATH calculation from a ZIP archive."""
+        """Load a KXKY calculation from a ZIP archive."""
 
         dft = PyVASP(
             self.test_data_AuSi_zip,
@@ -113,8 +155,19 @@ class TestPyVASP(unittest.TestCase):
         )
 
         dft.load(reload=True)
+
         self.assertEqual(dft.cache_path.parent, self.cache_dir)
-        #self.assert_bs_path_data(dft)
+
+        self.assertIsNotNone(dft.data.kxky)
+
+        self.assertGreater(dft.nky, 0)
+
+        self.assertEqual(
+            len(dft.data.kxky.slices),
+            dft.nky,
+        )
+
+        self.assert_kxky_data(dft)
 
     def test_load_so_static_from_directory(self):
         """Load an SO calculation from its concrete directory."""
