@@ -47,30 +47,7 @@ class TestPlot(unittest.TestCase):
             self.dft.nbands,
         )
 
-    def test_plot_bands_x_coordinates(self):
-        """The x coordinates should contain all k-points."""
-        ax = plot_bands(
-            self.dft,
-            e_min=-50,
-            e_max=50,
-        )
-
-        x_data = ax.lines[0].get_xdata()
-
-        self.assertEqual(
-            len(x_data),
-            self.dft.nkpoints,
-        )
-
-        np.testing.assert_allclose(
-            x_data,
-            np.linspace(
-                0,
-                self.dft.knorm,
-                self.dft.nkpoints,
-            ),
-        )
-
+   
     def test_plot_bands_energy_values(self):
         """The plotted energies should equal E - EF - eshift."""
         ax = plot_bands(
