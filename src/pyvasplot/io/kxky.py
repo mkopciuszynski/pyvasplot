@@ -7,7 +7,7 @@ from pymatgen.core import IStructure
 from pymatgen.io.vasp.outputs import Kpoints, Outcar, Procar
 
 
-def load_kxky(path: Path) -> VASPData:
+def load_kxky(path: Path, show_progress: bool = False) -> VASPData:
     """Load a KXKY calculation consisting of indexed VASP files."""
 
     procar_files = _sort_indexed_files(path, "PROCAR.*")
@@ -39,6 +39,7 @@ def load_kxky(path: Path) -> VASPData:
             total=len(procar_files),
             desc="Loading KXKY",
             unit="ky",
+            disable=not show_progress,
         )
     ):
         slices.append(

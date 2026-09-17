@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy.typing import NDArray
 
-from pyvasplot import PyVASP
+from pyvasplot.pyvasp import PyVASP
 from pyvasplot.plotting.kpath import generate_labels, generate_kpath_bands
 from pyvasplot.plotting._data import generate_line_bands, shifted_energy
 
@@ -98,7 +98,6 @@ def plot_bands(
         ax.set_xticks(x_label_pos, x_labels)
 
     return ax
-
 
 
 

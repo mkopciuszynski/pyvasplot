@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from pyvasplot import PyVASP
+from pyvasplot.pyvasp import PyVASP
 
 
 def by_name(dft: PyVASP, ion_name: str) -> tuple[int, ...]:

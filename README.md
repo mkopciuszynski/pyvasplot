@@ -46,6 +46,13 @@ print(dft.nkpoints)
 print(dft.efermi)
 ```
 
+Loading is silent by default. For interactive workflows, progress reporting
+can be enabled explicitly:
+
+```python
+dft.load(show_progress=True)
+```
+
 ZIP archives can be loaded by specifying the directory inside the archive:
 
 ```python

@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy.typing import NDArray
 
-from pyvasplot import PyVASP
+from pyvasplot.pyvasp import PyVASP
 
 
 def plot_kpath(

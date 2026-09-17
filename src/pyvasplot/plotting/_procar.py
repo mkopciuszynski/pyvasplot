@@ -5,7 +5,7 @@ from collections.abc import Sequence
 from numpy.typing import NDArray
 from scipy.interpolate import CubicSpline
 
-from pyvasplot import PyVASP
+from pyvasplot.pyvasp import PyVASP
 from pyvasplot.plotting._data import shifted_energy
 
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 from numpy.typing import NDArray
 
-from pyvasplot import PyVASP
+from pyvasplot.pyvasp import PyVASP
 from pyvasplot.plotting.kpath import generate_kpath_bands
 
 

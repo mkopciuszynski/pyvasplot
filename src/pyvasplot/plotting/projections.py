@@ -6,7 +6,7 @@ from collections.abc import Sequence
 from pyvasplot.types import CalculationType
 
 
-from pyvasplot import PyVASP
+from pyvasplot.pyvasp import PyVASP
 from pyvasplot.plotting._data import (
     prepare_projection_data,
     shifted_energy,

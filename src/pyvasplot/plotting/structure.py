@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from ase.visualize.plot import plot_atoms
 from pymatgen.io.ase import AseAtomsAdaptor
 
-from pyvasplot import PyVASP
+from pyvasplot.pyvasp import PyVASP
 
 
 _VIEW_ROTATIONS = {

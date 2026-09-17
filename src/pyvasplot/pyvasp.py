@@ -1,18 +1,13 @@
 from pathlib import Path
-
 import re
+import warnings
+
 import numpy as np
 from numpy.typing import NDArray
-
 from pymatgen.core import IStructure
-
-from pyvasplot.data import VASPData
-from pyvasplot.types import CalculationType
 from pymatgen.electronic_structure.core import Spin
 
-
-from pathlib import Path
-
+from pyvasplot.data import VASPData
 from pyvasplot.types import CalculationType, infer_calculation_type
 
 
@@ -51,9 +46,12 @@ class PyVASP:
         self._eshift = 0.0
         self._selected_ky = 0
 
-
-
-    def load(self, reload: bool = False) -> None:
+    def load(
+        self,
+        reload: bool = False,
+        show_progress: bool = False,
+    ) -> None:
+        """Load calculation data, optionally showing progress for long loads."""
         if self.calculation_type is None:
             raise ValueError(
                 "Could not determine the calculation type. "
@@ -68,10 +66,10 @@ class PyVASP:
             cache_path=self.cache_path,
             subpath=self.subpath,
             reload=reload,
+            show_progress=show_progress,
         )
 
-
-    def __str__(self):
+    def __str__(self) -> str:
         efermi = self.outcar.efermi if self.outcar is not None else "-"
         lines = [
             f"PyVASP: {self.name}",
@@ -81,8 +79,8 @@ class PyVASP:
             f"  cache: {self.full_cache_path}",
             f"  e-fermi: {efermi} eV",
             f"  eshift: {self.eshift} eV",
-        ] 
-            
+        ]
+
         return "\n".join(lines)
 
     def __repr__(self) -> str:
@@ -121,16 +119,17 @@ class PyVASP:
         """Absolute path to the local cache file."""
         return self.cache_path.resolve()
 
-
-
     @property
     def eshift(self) -> float:
         return self._eshift
-    
+
     @eshift.setter
-    def eshift(self, value):
+    def eshift(self, value: float) -> None:
         if np.abs(value) > 1.0:
-            Warning("The energy shift is bigger than 1 eV!")
+            warnings.warn(
+                "The energy shift is bigger than 1 eV!",
+                stacklevel=2,
+            )
         self._eshift = value
 
     @property
@@ -167,18 +166,13 @@ class PyVASP:
 
     @property
     def nkpoints(self) -> int:
+        """Number of k-points represented by the parsed electronic data."""
         return self.eigenvalues.shape[0]
 
     @property
     def nions(self) -> int:
+        """Number of ions represented in the loaded projection data."""
         return self.procar.nions
-
-        
-    @property
-    def nkpoints(self) -> int:
-        """Number of k-points represented by the parsed electronic data."""
-        return self.eigenvalues.shape[0]
-
 
     @property
     def num_kpts(self) -> int:
@@ -191,13 +185,6 @@ class PyVASP:
     def kpts(self) -> NDArray:
         """K-point coordinates from the KPOINTS file."""
         return np.asarray(self.kpoints.kpts)
-
-
-    @property
-    def nions(self) -> int:
-        """Number of ions."""
-        return self.procar.nions
-
 
     @property
     def structure(self) -> IStructure:
@@ -258,9 +245,8 @@ class PyVASP:
             raise ValueError(
                 "selected_ky is only available for KXKY calculations."
             )
-
         return self._selected_ky
-
+        return self._selected_ky
 
     @selected_ky.setter
     def selected_ky(self, ky: int) -> None:
@@ -286,7 +272,6 @@ class PyVASP:
         self.data.outcar = selected.outcar
         self.data.kpoints = selected.kpoints
 
-
     @property
     def kynorm(self) -> float:
         """Maximum ky coordinate across the KXKY grid."""
@@ -308,10 +293,9 @@ class PyVASP:
 
         if not ky_values:
             return 0.0
-
+        return float(np.max(ky_values))
         return float(np.max(ky_values))
 
-    
     @property
     def model_number(self) -> str:
         """Return the four-digit model number from the calculation name."""
@@ -324,7 +308,7 @@ class PyVASP:
             f"Could not find a four-digit model number in '{self.name}'."
         )
 
-    
+
 def _generate_name(path: str, subpath: str | None = None) -> str:
     normalized = path.replace("\\", "_").replace("/", "_")
     normalized = normalized.replace(":", "_")
