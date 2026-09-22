@@ -8,7 +8,6 @@ from pymatgen.io.ase import AseAtomsAdaptor
 
 from pyvasplot.pyvasp import PyVASP
 
-
 _VIEW_ROTATIONS = {
     "xy": "0x,0y,0z",
     "xz": "-90x,0y,0z",

@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from tqdm import tqdm
-
-from pyvasplot.data import KXKYSlice, KXKYData, VASPData
 from pymatgen.core import IStructure
 from pymatgen.io.vasp.outputs import Kpoints, Outcar, Procar
+from tqdm import tqdm
+
+from pyvasplot.data import KXKYData, KXKYSlice, VASPData
 
 
 def load_kxky(path: Path, show_progress: bool = False) -> VASPData:

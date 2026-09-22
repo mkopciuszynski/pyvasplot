@@ -6,7 +6,6 @@ import numpy as np
 
 from pyvasplot import PyVASP
 
-
 DATA_DIR = Path(__file__).parent / "data"
 
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from numpy.typing import NDArray
 
 from pyvasplot.pyvasp import PyVASP

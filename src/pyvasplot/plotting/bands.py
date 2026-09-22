@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import numpy as np
 import matplotlib.pyplot as plt
-from numpy.typing import NDArray
+import numpy as np
 
+from pyvasplot.plotting._bands import generate_line_bands
+from pyvasplot.plotting.kpath import generate_kpath_bands, generate_labels
 from pyvasplot.pyvasp import PyVASP
-from pyvasplot.plotting.kpath import generate_labels, generate_kpath_bands
-from pyvasplot.plotting._bands import generate_line_bands, shifted_energy
 
 
 def plot_bands(

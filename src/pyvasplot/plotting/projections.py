@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-import numpy as np
-import matplotlib.pyplot as plt
 from collections.abc import Sequence
-from pyvasplot.types import CalculationType
 
+import matplotlib.pyplot as plt
+import numpy as np
 
-from pyvasplot.pyvasp import PyVASP
 from pyvasplot.plotting._bands import shifted_energy
 from pyvasplot.plotting._procar import (
     interpolate_map,
@@ -14,6 +12,7 @@ from pyvasplot.plotting._procar import (
     prepare_projection_data,
     project_procar,
 )
+from pyvasplot.pyvasp import PyVASP
 
 
 def plot_procar_bands(

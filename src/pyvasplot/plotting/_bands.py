@@ -4,7 +4,6 @@ import numpy as np
 from numpy.typing import NDArray
 
 from pyvasplot.pyvasp import PyVASP
-from pyvasplot.plotting.kpath import generate_kpath_bands
 
 
 def generate_line_bands(

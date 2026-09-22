@@ -1,17 +1,18 @@
 from __future__ import annotations
 
-import numpy as np
 from collections.abc import Sequence
 from typing import Literal
+
+import numpy as np
 from numpy.typing import NDArray
 from scipy.interpolate import CubicSpline
 
-from pyvasplot.pyvasp import PyVASP
 from pyvasplot.plotting._bands import (
     generate_line_bands,
     shifted_energy,
 )
 from pyvasplot.plotting.kpath import generate_kpath_bands
+from pyvasplot.pyvasp import PyVASP
 
 
 def prepare_projection_data(

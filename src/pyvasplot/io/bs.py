@@ -2,9 +2,7 @@ from pathlib import Path
 
 from pymatgen.core.structure import IStructure
 from pymatgen.io.vasp import Kpoints
-from pymatgen.io.vasp.outputs import Outcar
-from pymatgen.io.vasp.outputs import Procar
-
+from pymatgen.io.vasp.outputs import Outcar, Procar
 
 from pyvasplot.data import VASPData
 

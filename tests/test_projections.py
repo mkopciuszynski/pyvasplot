@@ -1,17 +1,15 @@
-import unittest
 import tempfile
+import unittest
+from pathlib import Path
 from typing import cast
 
-from pathlib import Path
+from pymatgen.io.vasp.outputs import Outcar, Procar
+from pymatgen.util.typing import Spin
 
 from pyvasplot import PyVASP
-from pymatgen.util.typing import Spin
-from pymatgen.io.vasp.outputs import Outcar, Procar
-
-from pyvasplot.plotting._procar import project_procar, orbital_indices_for
-from pyvasplot.plotting.projections import prepare_projection_data
 from pyvasplot.plotting._bands import shifted_energy
-
+from pyvasplot.plotting._procar import orbital_indices_for, project_procar
+from pyvasplot.plotting.projections import prepare_projection_data
 
 DATA_DIR = Path(__file__).parent / "data"
 MODEL_DIR = DATA_DIR / "WSb_110_GGA_0012"

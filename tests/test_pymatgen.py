@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+
 from pymatgen.io.vasp.outputs import Kpoints, Outcar, Procar
 from pymatgen.util.typing import Spin
 

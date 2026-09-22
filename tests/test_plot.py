@@ -1,5 +1,5 @@
-import unittest
 import tempfile
+import unittest
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -9,7 +9,6 @@ from pyvasplot import PyVASP
 from pyvasplot.plotting import plot_bands, plot_procar_bands
 from pyvasplot.plotting.kpath import generate_kpath_bands
 from pyvasplot.plotting.structure import plot_structure
-
 
 DATA_DIR = Path(__file__).parent / "data"
 
