@@ -7,27 +7,62 @@ from numpy.typing import NDArray
 from scipy.interpolate import CubicSpline
 
 from pyvasplot.pyvasp import PyVASP
-from pyvasplot.plotting._data import shifted_energy
+from pyvasplot.plotting._bands import (
+    generate_line_bands,
+    shifted_energy,
+)
+from pyvasplot.plotting.kpath import generate_kpath_bands
+
+
+def prepare_projection_data(
+    dft: PyVASP,
+    k_section: int | None = None,
+    k_norm: float | None = None,
+    k_flip: bool = False,
+) -> tuple[NDArray, NDArray, NDArray]:
+    """Prepare coordinates, bands, and PROCAR data for projection plots."""
+    procar_data = dft.procar_data
+
+    if dft.calculation_type.is_path:
+        kx, bands = generate_kpath_bands(
+            dft,
+            k_norm=k_norm,
+            k_section=k_section,
+        )
+
+        if k_section is not None:
+            nk = len(kx)
+            start = k_section * nk
+            stop = start + nk
+            procar_data = procar_data[start:stop, :]
+    else:
+        kx, bands = generate_line_bands(dft, k_norm)
+
+    if k_flip:
+        bands = np.flip(bands, axis=0)
+        procar_data = np.flip(procar_data, axis=0)
+
+    return kx, bands, procar_data
 
 
 def project_procar(
-    dft: PyVASP,
     procar_data: NDArray,
+    orbitals: Sequence[str],
     ions: int | Sequence[int] | np.ndarray | None,
-    orbitals: str | Sequence[str] | None,
+    selected_orbitals: str | Sequence[str] | None,
     ion_reduction: Literal["sum", "mean"] = "mean",
 ) -> NDArray:
     """Sum selected orbitals and reduce selected ions by sum or mean."""
     if ions is None:
-        selected_ions = list(range(dft.nions))
+        selected_ions = list(range(procar_data.shape[2]))
     elif isinstance(ions, (int, np.integer)):
         selected_ions = [int(ions)]
     else:
         selected_ions = list(ions)
         if not selected_ions:
-            selected_ions = list(range(dft.nions))
+            selected_ions = list(range(procar_data.shape[2]))
 
-    orbital_indices = orbital_indices_for(dft.procar.orbitals, orbitals)
+    orbital_indices = orbital_indices_for(orbitals, selected_orbitals)
 
     data = np.sum(
         procar_data[:, :, :, orbital_indices],

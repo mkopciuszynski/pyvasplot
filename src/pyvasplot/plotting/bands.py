@@ -6,7 +6,7 @@ from numpy.typing import NDArray
 
 from pyvasplot.pyvasp import PyVASP
 from pyvasplot.plotting.kpath import generate_labels, generate_kpath_bands
-from pyvasplot.plotting._data import generate_line_bands, shifted_energy
+from pyvasplot.plotting._bands import generate_line_bands, shifted_energy
 
 
 def plot_bands(

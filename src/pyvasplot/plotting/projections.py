@@ -7,13 +7,11 @@ from pyvasplot.types import CalculationType
 
 
 from pyvasplot.pyvasp import PyVASP
-from pyvasplot.plotting._data import (
-    prepare_projection_data,
-    shifted_energy,
-)
+from pyvasplot.plotting._bands import shifted_energy
 from pyvasplot.plotting._procar import (
     interpolate_map,
     make_energy_map,
+    prepare_projection_data,
     project_procar,
 )
 
@@ -42,8 +40,8 @@ def plot_procar_bands(
     )
 
     projection = project_procar(
-        dft,
         procar_data,
+        dft.procar.orbitals,
         ions,
         orbitals,
     )
@@ -118,8 +116,8 @@ def plot_procar_map(
     )
 
     projection = project_procar(
-        dft,
         procar_data,
+        dft.procar.orbitals,
         ions,
         orbitals,
     )
@@ -211,8 +209,8 @@ def plot_procar_scatter(
     )
 
     projection = project_procar(
-        dft,
         procar_data,
+        dft.procar.orbitals,
         ions,
         orbitals,
     )
@@ -334,8 +332,8 @@ def plot_procar_kxky(
         )
 
         projection = project_procar(
-            dft,
             procar_data,
+            dft.procar.orbitals,
             ions,
             orbitals,
         )
@@ -358,8 +356,8 @@ def plot_procar_kxky(
             )
 
             projection = project_procar(
-                dft,
                 procar_data,
+                dft.procar.orbitals,
                 ions,
                 orbitals,
             )

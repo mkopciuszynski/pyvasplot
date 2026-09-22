@@ -10,7 +10,7 @@ from pymatgen.io.vasp.outputs import Outcar, Procar
 
 from pyvasplot.plotting._procar import project_procar, orbital_indices_for
 from pyvasplot.plotting.projections import prepare_projection_data
-from pyvasplot.plotting._data import shifted_energy
+from pyvasplot.plotting._bands import shifted_energy
 
 
 DATA_DIR = Path(__file__).parent / "data"
@@ -102,29 +102,58 @@ class TestProjections(unittest.TestCase):
 
         kx, bands, procar_data = prepare_projection_data(self.dft)
 
-        projected = project_procar(self.dft, procar_data, orbitals="s", ions=0)
+        projected = project_procar(
+            procar_data,
+            orbitals,
+            ions=0,
+            selected_orbitals="s",
+        )
         self.assertAlmostEqual(projected[0, 0], 0.000, places=3)
         self.assertAlmostEqual(projected[-1, -1], 0.163, places=3)
 
-        projected = project_procar(self.dft, procar_data, orbitals=("px", "py"), ions=0)
+        projected = project_procar(
+            procar_data,
+            orbitals,
+            ions=0,
+            selected_orbitals=("px", "py"),
+        )
         self.assertAlmostEqual(projected[0, 0], 0.013, places=3)
         self.assertAlmostEqual(projected[-1, -1], 0.006, places=3)
 
-        projected = project_procar(self.dft, procar_data, orbitals=("s", "py"), ions=0)
+        projected = project_procar(
+            procar_data,
+            orbitals,
+            ions=0,
+            selected_orbitals=("s", "py"),
+        )
         self.assertAlmostEqual(projected[0, 0], 0.013, places=3)
         self.assertAlmostEqual(projected[-1, -1], 0.169, places=3)
 
-        projected = project_procar(self.dft, procar_data, orbitals=None, ions=0)
+        projected = project_procar(
+            procar_data,
+            orbitals,
+            ions=0,
+            selected_orbitals=None,
+        )
         self.assertAlmostEqual(projected[0, 0], 0.013, places=3)
         self.assertAlmostEqual(projected[-1, -1], 0.180, places=3)
 
         projected = project_procar(
-            self.dft, procar_data, orbitals="py", ions=None, ion_reduction="sum"
+            procar_data,
+            orbitals,
+            ions=None,
+            selected_orbitals="py",
+            ion_reduction="sum",
         )
 
         self.assertAlmostEqual(projected[0, 0], (0.972), places=2)
 
-        projected = project_procar(self.dft, procar_data, orbitals="py", ions=11)
+        projected = project_procar(
+            procar_data,
+            orbitals,
+            ions=11,
+            selected_orbitals="py",
+        )
 
         self.assertAlmostEqual(projected[0, 2], 0.060, places=3)
 
