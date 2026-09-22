@@ -28,14 +28,10 @@ class PyVASP:
         )
 
         if calculation_type is None:
-            calculation_type = infer_calculation_type(
-                self.subpath or self.path
-            )
+            calculation_type = infer_calculation_type(self.subpath or self.path)
 
         self.calculation_type = (
-            CalculationType(calculation_type)
-            if calculation_type is not None
-            else None
+            CalculationType(calculation_type) if calculation_type is not None else None
         )
 
         self.local_dir = Path(local_dir)
@@ -191,7 +187,6 @@ class PyVASP:
 
         return self.kpoints.num_kpts
 
-
     @property
     def kpts(self) -> NDArray:
         """K-point coordinates from the KPOINTS file."""
@@ -202,13 +197,10 @@ class PyVASP:
         """Real-space lattice vectors."""
         return np.asarray(self.structure.lattice.matrix)
 
-
     @property
     def cell_inverse(self) -> NDArray:
         """Reciprocal-space lattice vectors including 2π."""
-        return np.asarray(
-            self.structure.lattice.reciprocal_lattice.matrix
-        )
+        return np.asarray(self.structure.lattice.reciprocal_lattice.matrix)
 
     @property
     def knorm(self) -> float:
@@ -239,31 +231,25 @@ class PyVASP:
 
         return self.kxky.nky
 
-
     @property
     def selected_ky(self) -> int:
         """Currently selected ky slice."""
         if not self.calculation_type.is_kxky:
-            raise ValueError(
-                "selected_ky is only available for KXKY calculations."
-            )
+            raise ValueError("selected_ky is only available for KXKY calculations.")
         return self._selected_ky
 
     @selected_ky.setter
     def selected_ky(self, ky: int) -> None:
         """Select a ky slice and expose its data through the main properties."""
         if not self.calculation_type.is_kxky:
-            raise ValueError(
-                "selected_ky is only available for KXKY calculations."
-            )
+            raise ValueError("selected_ky is only available for KXKY calculations.")
 
         if self.kxky is None:
             raise RuntimeError("KXKY data has not been loaded.")
 
         if not 0 <= ky < self.kxky.nky:
             raise IndexError(
-                f"ky index {ky} is out of range. "
-                f"Valid range is 0-{self.kxky.nky - 1}."
+                f"ky index {ky} is out of range. Valid range is 0-{self.kxky.nky - 1}."
             )
 
         self._selected_ky = ky
@@ -299,9 +285,7 @@ class PyVASP:
         if match:
             return match.group()
 
-        raise ValueError(
-            f"Could not find a four-digit model number in '{self.name}'."
-        )
+        raise ValueError(f"Could not find a four-digit model number in '{self.name}'.")
 
 
 def _generate_name(path: str, subpath: str | None = None) -> str:

@@ -60,6 +60,7 @@ def plot_kpath(
 
     return ax
 
+
 def generate_kpath_bands(
     dft: PyVASP,
     k_norm: float | None = None,
@@ -87,23 +88,17 @@ def generate_kpath_bands(
         axis=1,
     )
 
-    kx = np.concatenate(
-        ([0.0], np.cumsum(distances))
-    )
+    kx = np.concatenate(([0.0], np.cumsum(distances)))
 
     if k_section is None:
         if k_norm is not None:
-            raise ValueError(
-                "k_norm cannot be used with a complete path."
-            )
+            raise ValueError("k_norm cannot be used with a complete path.")
 
         return kx, bands
 
     # For now, determine the section boundaries from the actual
     # PROCAR k-points.
-    sections = _get_kpath_sections(
-        dft
-    )
+    sections = _get_kpath_sections(dft)
 
     if k_section >= len(sections):
         raise ValueError(
@@ -160,9 +155,7 @@ def _get_kpath_sections(
         return [(0, n_procar)]
 
     if len(kpoints) % 2 != 0:
-        raise ValueError(
-            "Line-mode KPOINTS must contain pairs of k-points."
-        )
+        raise ValueError("Line-mode KPOINTS must contain pairs of k-points.")
 
     # In VASP line mode:
     #
@@ -177,9 +170,7 @@ def _get_kpath_sections(
     points_per_section = int(dft.kpoints.num_kpts)
 
     if points_per_section <= 0:
-        raise ValueError(
-            "KPOINTS.num_kpts must be positive."
-        )
+        raise ValueError("KPOINTS.num_kpts must be positive.")
 
     expected_points = n_sections * points_per_section
 
@@ -212,10 +203,7 @@ def _get_kpath_sections(
     # or beginning depending on the parser.
     #
     # Start with the ideal section boundaries.
-    boundaries = [
-        section * points_per_section
-        for section in range(n_sections + 1)
-    ]
+    boundaries = [section * points_per_section for section in range(n_sections + 1)]
 
     # Distribute removed points across the path boundaries.
     #
@@ -247,9 +235,7 @@ def _get_kpath_sections(
 
         stop = start + length
 
-        sections.append(
-            (start, stop)
-        )
+        sections.append((start, stop))
 
         start = stop
 
@@ -328,14 +314,8 @@ def _reciprocal_lattice_points(
 
     for i in range(-inv_space_size, inv_space_size + 1):
         for j in range(-inv_space_size, inv_space_size + 1):
-            x[ind] = (
-                reciprocal_lattice[0, 0] * i
-                + reciprocal_lattice[1, 0] * j
-            )
-            y[ind] = (
-                reciprocal_lattice[0, 1] * i
-                + reciprocal_lattice[1, 1] * j
-            )
+            x[ind] = reciprocal_lattice[0, 0] * i + reciprocal_lattice[1, 0] * j
+            y[ind] = reciprocal_lattice[0, 1] * i + reciprocal_lattice[1, 1] * j
             ind += 1
 
     return x, y

@@ -26,8 +26,8 @@ EXPECTED_PROJECTIONS = {
     (-1, -1, 11, 0): 0.009,
 }
 
-class TestPymatgen(unittest.TestCase):
 
+class TestPymatgen(unittest.TestCase):
     def setUp(self):
         self.outcar_path = MODEL_DIR / "OUTCAR"
         self.procar_path = MODEL_DIR / "PROCAR"
@@ -37,20 +37,19 @@ class TestPymatgen(unittest.TestCase):
         outcar = Outcar(self.outcar_path)
 
         self.assertIsNotNone(outcar)
-        self.assertTrue(hasattr(outcar, 'efermi'))
-        self.assertTrue(hasattr(outcar, 'run_stats'))
-        self.assertTrue(hasattr(outcar, 'magnetization'))
+        self.assertTrue(hasattr(outcar, "efermi"))
+        self.assertTrue(hasattr(outcar, "run_stats"))
+        self.assertTrue(hasattr(outcar, "magnetization"))
         self.assertAlmostEqual(float(outcar.efermi), 4.5587, places=4)
-
 
     def test_load_procar(self):
         """Load PROCAR metadata and verify selected source-file values."""
         procar = Procar(self.procar_path)
 
         self.assertIsNotNone(procar)
-        self.assertTrue(hasattr(procar, 'nkpoints'))
-        self.assertTrue(hasattr(procar, 'nbands'))
-        self.assertTrue(hasattr(procar, 'nions'))
+        self.assertTrue(hasattr(procar, "nkpoints"))
+        self.assertTrue(hasattr(procar, "nbands"))
+        self.assertTrue(hasattr(procar, "nions"))
 
         self.assertEqual(procar.data[Spin.up].shape, (64, 128, 19, 9))
         self.assertEqual(procar.nbands, 128)
@@ -80,5 +79,6 @@ class TestPymatgen(unittest.TestCase):
         self.assertEqual(kpoints.num_kpts, 0)
         self.assertEqual(kpoints.kpts, [(1, 1, 1)])
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

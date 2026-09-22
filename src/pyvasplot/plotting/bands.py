@@ -89,7 +89,7 @@ def plot_bands(
     if k_mirror:
         ax.plot(k_start - kx, bands - dft.efermi - dft.eshift, attr, **kwargs)
 
-    #ax.set_xlabel(r"$k$")
+    # ax.set_xlabel(r"$k$")
     ax.set_ylabel(r"$E - E_F$ (eV)")
     ax.set_ylim(e_min, e_max)
 
@@ -98,10 +98,3 @@ def plot_bands(
         ax.set_xticks(x_label_pos, x_labels)
 
     return ax
-
-
-
-
-
-
-

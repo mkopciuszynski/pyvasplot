@@ -11,7 +11,6 @@ DATA_DIR = Path(__file__).parent / "data"
 
 
 class TestPyVASP(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.test_data_zip = DATA_DIR / "Sb_111_GGA_0014.zip"
@@ -46,9 +45,10 @@ class TestPyVASP(unittest.TestCase):
 
         self.assertEqual(procar.nkpoints, 93)
         self.assertEqual(procar.nbands, 12)
-        self.assertEqual(procar.orbitals, [
-            "s", "py", "pz", "px", "dxy", "dyz", "dz2", "dxz", "x2-y2"
-        ])
+        self.assertEqual(
+            procar.orbitals,
+            ["s", "py", "pz", "px", "dxy", "dyz", "dz2", "dxz", "x2-y2"],
+        )
         np.testing.assert_allclose(
             procar.kpoints[0],
             [0.5, 0.5, 0.0],
@@ -59,9 +59,7 @@ class TestPyVASP(unittest.TestCase):
         )
 
         self.assertEqual(kpoints.num_kpts, 32)
-        self.assertEqual(kpoints.labels, [
-            "M", "Gamma", "Gamma", "K", "K", "M"
-        ])
+        self.assertEqual(kpoints.labels, ["M", "Gamma", "Gamma", "K", "K", "M"])
         self.assertEqual(structure.composition.reduced_formula, "Sb")
         self.assertEqual(len(structure), 2)
 
@@ -176,7 +174,6 @@ class TestPyVASP(unittest.TestCase):
         dft.load(reload=True)
         self.assertEqual(dft.cache_path.parent, self.cache_dir)
         self.assert_bs_path_data(dft)
-
 
     def test_load_kxky_from_zip(self):
         """Load a KXKY calculation from a ZIP archive."""

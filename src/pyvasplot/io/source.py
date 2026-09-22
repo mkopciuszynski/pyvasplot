@@ -23,8 +23,7 @@ class DataSource:
 
             else:
                 raise ValueError(
-                    f"Data source must be a directory or ZIP archive: "
-                    f"{self.path}"
+                    f"Data source must be a directory or ZIP archive: {self.path}"
                 )
 
             if self.subpath is None:

@@ -249,9 +249,7 @@ def plot_procar_scatter(
         energy_vec,
     )
 
-    scatter_data = (
-        procar_map_interp - min_val
-    ) * 1000 * norm_val
+    scatter_data = (procar_map_interp - min_val) * 1000 * norm_val
 
     if ax is None:
         _, ax = plt.subplots(figsize=(6, 4))
@@ -276,6 +274,7 @@ def plot_procar_scatter(
 
     return ax
 
+
 def plot_procar_kxky(
     dft: PyVASP,
     ions: int | Sequence[int] | np.ndarray | None = None,
@@ -294,31 +293,20 @@ def plot_procar_kxky(
 ) -> plt.Axes:
     """Create a KXKY spectral map from PROCAR projections."""
 
-
     if dft.kxky is None:
-        raise RuntimeError(
-            "KXKY data has not been loaded."
-        )
+        raise RuntimeError("KXKY data has not been loaded.")
 
     if lorentz_width <= 0:
-        raise ValueError(
-            "lorentz_width must be greater than zero."
-        )
+        raise ValueError("lorentz_width must be greater than zero.")
 
     if e_cut_width <= 0:
-        raise ValueError(
-            "e_cut_width must be greater than zero."
-        )
+        raise ValueError("e_cut_width must be greater than zero.")
 
     if ek_size < 2:
-        raise ValueError(
-            "ek_size must be at least 2."
-        )
+        raise ValueError("ek_size must be at least 2.")
 
     if interp_k < 1:
-        raise ValueError(
-            "interp_k must be at least 1."
-        )
+        raise ValueError("interp_k must be at least 1.")
 
     original_ky = dft.selected_ky
 
@@ -412,17 +400,9 @@ def plot_procar_kxky(
         )
 
     # Physical extent.
-    kx_extent = (
-        kx_norm
-        if kx_norm is not None
-        else float(kx.max())
-    )
+    kx_extent = kx_norm if kx_norm is not None else float(kx.max())
 
-    ky_extent = (
-        ky_norm
-        if ky_norm is not None
-        else dft.kynorm
-    )
+    ky_extent = ky_norm if ky_norm is not None else dft.kynorm
 
     if k_mirror:
         map_mirrored = np.concatenate(
@@ -470,15 +450,7 @@ def plot_procar_kxky(
             **kwargs,
         )
 
-    ax.set_xlabel(
-        r"$k_x$"
-        if kx_norm is not None
-        else r"$k_x$ (1/A)"
-    )
-    ax.set_ylabel(
-        r"$k_y$"
-        if ky_norm is not None
-        else r"$k_y$ (1/A)"
-    )
+    ax.set_xlabel(r"$k_x$" if kx_norm is not None else r"$k_x$ (1/A)")
+    ax.set_ylabel(r"$k_y$" if ky_norm is not None else r"$k_y$ (1/A)")
 
     return ax

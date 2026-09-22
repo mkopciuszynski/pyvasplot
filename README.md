@@ -36,8 +36,8 @@ Load a calculation from a directory by providing its calculation type:
 from pyvasplot import PyVASP
 
 dft = PyVASP(
-	"path/to/Sb_111_GGA_0014/BS_MGKM",
-	calculation_type="BS_KPATH",
+    "path/to/Sb_111_GGA_0014/BS_MGKM",
+    calculation_type="BS_KPATH",
 )
 dft.load()
 
@@ -57,9 +57,9 @@ ZIP archives can be loaded by specifying the directory inside the archive:
 
 ```python
 dft = PyVASP(
-	"path/to/Sb_111_GGA_0014.zip",
-	subpath="BS_MGKM",
-	calculation_type="BS_KPATH",
+    "path/to/Sb_111_GGA_0014.zip",
+    subpath="BS_MGKM",
+    calculation_type="BS_KPATH",
 )
 dft.load()
 ```
@@ -103,9 +103,9 @@ plot_procar_bands(dft, ions=0, orbitals="pz")
 
 # Multiple ions and orbitals
 plot_procar_bands(
-	dft,
-	ions=[0, 1],
-	orbitals=["px", "py", "pz"],
+    dft,
+    ions=[0, 1],
+    orbitals=["px", "py", "pz"],
 )
 plt.show()
 ```
@@ -126,19 +126,19 @@ can be supplied when creating `PyVASP`:
 
 ```python
 dft = PyVASP(
-	"path/to/calculation",
-	calculation_type="BS_KPATH",
-	local_dir=".cache/pyvasplot",
+    "path/to/calculation",
+    calculation_type="BS_KPATH",
+    local_dir=".cache/pyvasplot",
 )
 ```
 
 Useful path properties are available on every `PyVASP` instance:
 
 ```python
-dft.full_path         # Absolute path to the input directory or ZIP archive
-dft.full_data_path    # Absolute path combined with subpath
-dft.full_local_dir    # Absolute cache directory
-dft.full_cache_path   # Absolute cache file path
+dft.full_path  # Absolute path to the input directory or ZIP archive
+dft.full_data_path  # Absolute path combined with subpath
+dft.full_local_dir  # Absolute cache directory
+dft.full_cache_path  # Absolute cache file path
 ```
 
 `str(dft)` provides a readable summary, while `repr(dft)` provides a compact

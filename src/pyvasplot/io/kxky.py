@@ -15,15 +15,9 @@ def load_kxky(path: Path, show_progress: bool = False) -> VASPData:
     kpoints_files = _sort_indexed_files(path, "KPOINTS.*")
 
     if not procar_files:
-        raise FileNotFoundError(
-            f"No PROCAR.* files found in KXKY directory: {path}"
-        )
+        raise FileNotFoundError(f"No PROCAR.* files found in KXKY directory: {path}")
 
-    if not (
-        len(procar_files)
-        == len(outcar_files)
-        == len(kpoints_files)
-    ):
+    if not (len(procar_files) == len(outcar_files) == len(kpoints_files)):
         raise ValueError(
             "KXKY file count mismatch: "
             f"{len(procar_files)} PROCAR files, "
@@ -71,6 +65,4 @@ def _sort_indexed_files(path: Path, pattern: str) -> list[Path]:
             key=lambda file: int(file.name.rsplit(".", 1)[1]),
         )
     except ValueError as exc:
-        raise ValueError(
-            f"Expected indexed files matching {pattern!r}"
-        ) from exc
+        raise ValueError(f"Expected indexed files matching {pattern!r}") from exc

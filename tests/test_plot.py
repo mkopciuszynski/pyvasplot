@@ -11,12 +11,10 @@ from pyvasplot.plotting.kpath import generate_kpath_bands
 from pyvasplot.plotting.structure import plot_structure
 
 
-
 DATA_DIR = Path(__file__).parent / "data"
 
 
 class TestPlot(unittest.TestCase):
-
     @classmethod
     def setUpClass(cls):
         cls.test_data_dir = DATA_DIR / "Sb_111_GGA_0014"
@@ -70,12 +68,9 @@ class TestPlot(unittest.TestCase):
             np.testing.assert_allclose(np.asarray(line.get_xdata()), expected_kx)
             np.testing.assert_allclose(
                 np.asarray(line.get_ydata()),
-                expected_bands[:, band_index]
-                - self.dft.efermi
-                - self.dft.eshift,
+                expected_bands[:, band_index] - self.dft.efermi - self.dft.eshift,
             )
 
-   
     def test_plot_bands_energy_values(self):
         """The plotted energies should equal E - EF - eshift."""
         ax = plot_bands(
@@ -86,11 +81,7 @@ class TestPlot(unittest.TestCase):
 
         y_data = np.asarray(ax.lines[0].get_ydata())
 
-        expected = (
-            self.dft.eigenvalues[:, 0]
-            - self.dft.efermi
-            - self.dft.eshift
-        )
+        expected = self.dft.eigenvalues[:, 0] - self.dft.efermi - self.dft.eshift
 
         np.testing.assert_allclose(
             y_data,
@@ -109,9 +100,7 @@ class TestPlot(unittest.TestCase):
 
         for index in [0, 1, 10, -1]:
             expected = (
-                self.dft.eigenvalues[index, 0]
-                - self.dft.efermi
-                - self.dft.eshift
+                self.dft.eigenvalues[index, 0] - self.dft.efermi - self.dft.eshift
             )
 
             self.assertAlmostEqual(

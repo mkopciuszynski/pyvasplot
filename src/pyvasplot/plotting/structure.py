@@ -67,18 +67,14 @@ def plot_structure(
 
     elif isinstance(ax, plt.Axes):
         if len(views) != 1:
-            raise ValueError(
-                "A single Axes can only be used with one view."
-            )
+            raise ValueError("A single Axes can only be used with one view.")
         axes = [ax]
 
     else:
         axes = list(ax)
 
         if len(axes) != len(views):
-            raise ValueError(
-                f"Expected {len(views)} axes, got {len(axes)}."
-            )
+            raise ValueError(f"Expected {len(views)} axes, got {len(axes)}.")
 
     for axis, view in zip(axes, views):
         plot_atoms(
