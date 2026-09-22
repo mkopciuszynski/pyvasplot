@@ -61,7 +61,7 @@ def infer_calculation_type(path: str | Path) -> CalculationType | None:
     if "HSE06" in parts:
         return CalculationType.HSE06
 
-    if "KXKY" in parts:
+    if "BZ" in parts:
         return CalculationType.KXKY
 
     return None
