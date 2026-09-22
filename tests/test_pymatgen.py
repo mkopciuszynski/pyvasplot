@@ -16,7 +16,7 @@ class TestPymatgen(unittest.TestCase):
         self.kpoints_path = model_path / "KPOINTS"
 
 
-
+# 
     def test_load_outcar(self):
         outcar = Outcar(self.outcar_path)
 
