@@ -4,10 +4,9 @@ import warnings
 
 import numpy as np
 from numpy.typing import NDArray
-from pymatgen.core import IStructure
 from pymatgen.electronic_structure.core import Spin
 
-from pyvasplot.data import VASPData
+from pyvasplot.data import KXKYData, VASPData
 from pyvasplot.types import CalculationType, infer_calculation_type
 
 
@@ -42,7 +41,7 @@ class PyVASP:
         self.local_dir = Path(local_dir)
         self.local_dir.mkdir(parents=True, exist_ok=True)
 
-        self.data = VASPData()
+        self._data = VASPData()
         self._eshift = 0.0
         self._selected_ky = 0
 
@@ -60,7 +59,7 @@ class PyVASP:
 
         from pyvasplot.io.loader import load
 
-        self.data = load(
+        self._data = load(
             path=self.path,
             calculation_type=self.calculation_type,
             cache_path=self.cache_path,
@@ -134,19 +133,31 @@ class PyVASP:
 
     @property
     def procar(self):
-        return self.data.procar
+        if self._data.kxky is not None:
+            return self._data.kxky.slices[self._selected_ky].procar
+        return self._data.procar
 
     @property
     def outcar(self):
-        return self.data.outcar
+        if self._data.kxky is not None:
+            return self._data.kxky.slices[self._selected_ky].outcar
+        return self._data.outcar
 
     @property
     def kpoints(self):
-        return self.data.kpoints
+        if self._data.kxky is not None:
+            return self._data.kxky.slices[self._selected_ky].kpoints
+        return self._data.kpoints
 
     @property
     def structure(self):
-        return self.data.structure
+        if self._data.structure is None:
+            raise RuntimeError("Structure has not been loaded.")
+        return self._data.structure
+
+    @property
+    def kxky(self) -> KXKYData | None:
+        return self._data.kxky
 
     @property
     def eigenvalues(self):
@@ -187,15 +198,6 @@ class PyVASP:
         return np.asarray(self.kpoints.kpts)
 
     @property
-    def structure(self) -> IStructure:
-        """Atomic structure loaded from the calculation."""
-        if self.data.structure is None:
-            raise RuntimeError("Structure has not been loaded.")
-
-        return self.data.structure
-
-
-    @property
     def cell_real(self) -> NDArray:
         """Real-space lattice vectors."""
         return np.asarray(self.structure.lattice.matrix)
@@ -232,10 +234,10 @@ class PyVASP:
         if not self.calculation_type.is_kxky:
             raise ValueError("nky is only available for KXKY calculations.")
 
-        if self.data.kxky is None:
+        if self.kxky is None:
             raise RuntimeError("KXKY data has not been loaded.")
 
-        return self.data.kxky.nky
+        return self.kxky.nky
 
 
     @property
@@ -246,7 +248,6 @@ class PyVASP:
                 "selected_ky is only available for KXKY calculations."
             )
         return self._selected_ky
-        return self._selected_ky
 
     @selected_ky.setter
     def selected_ky(self, ky: int) -> None:
@@ -256,21 +257,16 @@ class PyVASP:
                 "selected_ky is only available for KXKY calculations."
             )
 
-        if self.data.kxky is None:
+        if self.kxky is None:
             raise RuntimeError("KXKY data has not been loaded.")
 
-        if not 0 <= ky < self.data.kxky.nky:
+        if not 0 <= ky < self.kxky.nky:
             raise IndexError(
                 f"ky index {ky} is out of range. "
-                f"Valid range is 0-{self.data.kxky.nky - 1}."
+                f"Valid range is 0-{self.kxky.nky - 1}."
             )
 
-        selected = self.data.kxky.slices[ky]
-
         self._selected_ky = ky
-        self.data.procar = selected.procar
-        self.data.outcar = selected.outcar
-        self.data.kpoints = selected.kpoints
 
     @property
     def kynorm(self) -> float:
@@ -279,12 +275,12 @@ class PyVASP:
         if not self.calculation_type.is_kxky:
             raise ValueError("kynorm is only available for KXKY data.")
 
-        if self.data.kxky is None:
+        if self.kxky is None:
             raise RuntimeError("KXKY data has not been loaded.")
 
         ky_values = []
 
-        for slice_data in self.data.kxky.slices:
+        for slice_data in self.kxky.slices:
             kpts_cart = np.dot(
                 slice_data.kpoints.kpts,
                 self.cell_inverse,
@@ -293,7 +289,6 @@ class PyVASP:
 
         if not ky_values:
             return 0.0
-        return float(np.max(ky_values))
         return float(np.max(ky_values))
 
     @property

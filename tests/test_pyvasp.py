@@ -39,10 +39,10 @@ class TestPyVASP(unittest.TestCase):
         self.assertIsNotNone(kpoints)
         self.assertIsNotNone(structure)
 
-        self.assertIs(dft.data.procar, procar)
-        self.assertIs(dft.data.outcar, outcar)
-        self.assertIs(dft.data.kpoints, kpoints)
-        self.assertIs(dft.data.structure, structure)
+        self.assertIs(dft.procar, procar)
+        self.assertIs(dft.outcar, outcar)
+        self.assertIs(dft.kpoints, kpoints)
+        self.assertIs(dft.structure, structure)
 
         self.assertEqual(procar.nkpoints, 93)
         self.assertEqual(procar.nbands, 12)
@@ -192,12 +192,12 @@ class TestPyVASP(unittest.TestCase):
 
         self.assertEqual(dft.cache_path.parent, self.cache_dir)
 
-        self.assertIsNotNone(dft.data.kxky)
+        self.assertIsNotNone(dft.kxky)
 
         self.assertGreater(dft.nky, 0)
 
         self.assertEqual(
-            len(dft.data.kxky.slices),
+            len(dft.kxky.slices),
             dft.nky,
         )
 

@@ -295,7 +295,7 @@ def plot_procar_kxky(
     """Create a KXKY spectral map from PROCAR projections."""
 
 
-    if dft.data.kxky is None:
+    if dft.kxky is None:
         raise RuntimeError(
             "KXKY data has not been loaded."
         )

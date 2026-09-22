@@ -48,8 +48,8 @@ class TestProjections(unittest.TestCase):
             local_dir=self.cache_dir,
         )
         self.dft.load(reload=True)
-        self.procar = cast(Procar, self.dft.data.procar)
-        self.outcar = cast(Outcar, self.dft.data.outcar)
+        self.procar = cast(Procar, self.dft.procar)
+        self.outcar = cast(Outcar, self.dft.outcar)
 
     def tearDown(self):
         self._tmp_dir.cleanup()
