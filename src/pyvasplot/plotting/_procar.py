@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 from collections.abc import Sequence
+from typing import Literal
 from numpy.typing import NDArray
 from scipy.interpolate import CubicSpline
 
@@ -14,8 +15,9 @@ def project_procar(
     procar_data: NDArray,
     ions: int | Sequence[int] | np.ndarray | None,
     orbitals: str | Sequence[str] | None,
+    ion_reduction: Literal["sum", "mean"] = "mean",
 ) -> NDArray:
-    """Sum selected orbitals and average over selected ions."""
+    """Sum selected orbitals and reduce selected ions by sum or mean."""
     if ions is None:
         selected_ions = list(range(dft.nions))
     elif isinstance(ions, (int, np.integer)):
@@ -32,7 +34,12 @@ def project_procar(
         axis=3,
     )
 
-    return np.mean(data[:, :, selected_ions], axis=2)
+    selected_data = data[:, :, selected_ions]
+    if ion_reduction == "sum":
+        return np.sum(selected_data, axis=2)
+    if ion_reduction == "mean":
+        return np.mean(selected_data, axis=2)
+    raise ValueError("ion_reduction must be 'sum' or 'mean'")
 
 
 def make_energy_map(
@@ -80,10 +87,10 @@ def interpolate_map(
 def orbital_indices_for(
     orbitals: Sequence[str],
     selection: str | Sequence[str] | None,
-) -> list[int]:
+) -> tuple[int, ...]:
     """Convert selected orbital names into PROCAR orbital indices."""
     if selection is None:
-        return list(range(len(orbitals)))
+        return tuple(list(range(len(orbitals))))
 
     if isinstance(selection, str):
         selected = [selection]
@@ -91,6 +98,6 @@ def orbital_indices_for(
         selected = list(selection)
 
     if not selected:
-        return list(range(len(orbitals)))
+        return tuple(list(range(len(orbitals))))
 
-    return [orbitals.index(orbital) for orbital in selected]
+    return tuple([orbitals.index(orbital) for orbital in selected])
