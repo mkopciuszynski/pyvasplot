@@ -1,26 +1,54 @@
 # pyVASPlot
 
-Python tools for loading VASP calculations and visualizing electronic
-structure data.
+Python tools for analyzing and visualizing VASP electronic-structure data, including projection maps for comparison with ARPES experiments.
+
+> **⚠️ Work in progress**
+>
+> pyVASPlot is currently under active development and the API is not yet stable. Interfaces and functionality may change between releases.
+
+## Description
+
+**pyVASPlot** is a Python package for loading, manipulating, and visualizing electronic-structure data from [VASP](https://www.vasp.at/) calculations.
+
+The package provides a convenient data container, `PyVASP`, built around loaders from [`pymatgen`](https://pymatgen.org/). It is designed primarily for use in **Jupyter notebooks**, where VASP results can be loaded and further analyzed interactively.
+
+A particular focus of the package is the visualization of **orbital- and ion-projected electronic structure**, with the aim of facilitating comparison between DFT calculations and **ARPES (angle-resolved photoemission spectroscopy)** measurements.
+
+In addition to the core data structures and VASP loaders, pyVASPlot provides plotting and selection utilities for electronic-structure data, including band structures, k-space paths, PROCAR projections, and projected k-space maps.
+
+The package can also handle calculations performed along custom k-space planes, such as a `kx–ky` plane, and can generate projected constant-energy maps suitable for comparison with experimental ARPES maps.
 
 ## Features
 
-- Load VASP calculations from directories or ZIP archives.
-- Read band structures, spin-orbit calculations, HSE calculations, and
-  KXKY data through `pymatgen`-based loaders.
-- Plot band structures and reciprocal-space k-paths.
-- Plot orbital and ion projections from PROCAR data.
-- Cache parsed data locally for faster subsequent loads.
+* Load VASP calculations from directories or ZIP archives.
+* Parse data from common VASP output files, including:
+
+  * `PROCAR`
+  * `CONTCAR`
+  * `OUTCAR`
+  * `KPOINTS`
+* Load different types of electronic-structure calculations, including:
+
+  * band structures along k-paths
+  * spin-orbit coupling calculations
+  * HSE calculations
+  * custom k-space scans and `kx–ky` data
+* Use `pymatgen`-based loaders for parsing VASP output.
+* Store calculation data in a convenient `PyVASP` container.
+* Plot band structures and reciprocal-space k-paths.
+* Visualize orbital- and ion-projected data from `PROCAR`.
+* Generate projected k-space maps.
+* Select ions and orbitals for projection plots.
+* Cache parsed data locally to speed up subsequent loads.
+* Designed for interactive use in Jupyter notebooks.
 
 ## Installation
 
-pyVASPlot requires Python 3.12 or newer.
+pyVASPlot currently requires **Python 3.12 or newer**.
 
-```bash
-pip install pyvasplot
-```
+The package is currently under development and is not yet available as a stable PyPI release.
 
-For development:
+For development, clone the repository and install it in editable mode:
 
 ```bash
 git clone <repository-url>
@@ -28,132 +56,70 @@ cd pyvasplot
 pip install -e ".[dev]"
 ```
 
-## Loading Data
+## Example
 
-Load a calculation from a directory by providing its calculation type:
+A typical workflow starts by loading a VASP calculation into a `PyVASP` object.
 
 ```python
 from pyvasplot import PyVASP
-
-dft = PyVASP(
-    "path/to/Sb_111_GGA_0014/BS_MGKM",
-    calculation_type="BS_KPATH",
-)
-dft.load()
-
-print(dft.nbands)
-print(dft.nkpoints)
-print(dft.efermi)
-```
-
-Loading is silent by default. For interactive workflows, progress reporting
-can be enabled explicitly:
-
-```python
-dft.load(show_progress=True)
-```
-
-ZIP archives can be loaded by specifying the directory inside the archive:
-
-```python
-dft = PyVASP(
-    "path/to/Sb_111_GGA_0014.zip",
-    subpath="BS_MGKM",
-    calculation_type="BS_KPATH",
-)
-dft.load()
-```
-
-Supported calculation types include:
-
-```text
-BS, BS_KPATH
-HSE06, HSE06_KPATH
-SO_STATIC, SO_STATIC_KPATH
-KXKY, SO_STATIC_KXKY
-```
-
-## Plotting
-
-```python
-import matplotlib.pyplot as plt
-
 from pyvasplot.plotting import plot_bands, plot_kpath
 
-plot_bands(dft, e_min=-5, e_max=5)
-plt.show()
-```
-
-For a reciprocal-space k-path:
-
-```python
-plot_kpath(dft)
-plt.show()
-```
-
-## PROCAR Projections
-
-Ion and orbital selections accept either a single value or a collection:
-
-```python
-from pyvasplot.plotting import plot_procar_bands
-
-# Single ion and orbital
-plot_procar_bands(dft, ions=0, orbitals="pz")
-
-# Multiple ions and orbitals
-plot_procar_bands(
-    dft,
-    ions=[0, 1],
-    orbitals=["px", "py", "pz"],
-)
-plt.show()
-```
-
-Ion selectors are available for common structure-based selections:
-
-```python
-from pyvasplot.select import by_layer, by_name
-
-top_layer = by_layer(dft, layer=1)
-antimony = by_name(dft, "Sb")
-```
-
-## Paths and Cache
-
-Parsed data is cached in `dft_local` by default. A different cache directory
-can be supplied when creating `PyVASP`:
-
-```python
 dft = PyVASP(
-    "path/to/calculation",
+    "path/to/Sb_111_GGA_0014",
     calculation_type="BS_KPATH",
-    local_dir=".cache/pyvasplot",
+    sub_path="BS_MGKM",
+)
+
+dft.load()
+
+# Plot the reciprocal-space calculation path
+plot_kpath(dft)
+
+# Plot the band structure
+plot_bands(dft)
+```
+
+Projection maps can be generated by selecting specific ions and orbitals from the `PROCAR` data:
+
+```python
+from pyvasplot.select.ions import by_name
+from pyvasplot.plotting import plot_procar_map
+
+orbitals = ("s", "py", "pz", "px")
+ions = by_name(dft, "Sb")
+
+# Parameters defining the k-space section
+sec_MGM = {
+    "k_section": 0,
+    "k_mirror": True,
+    "k_flip": True,
+}
+
+# Plot the projection onto the selected ions and orbitals
+plot_procar_map(
+    dft,
+    ions=ions,
+    orbitals=orbitals,
+    **sec_MGM,
 )
 ```
 
-Useful path properties are available on every `PyVASP` instance:
+More examples and detailed documentation will be added as the package develops.
 
-```python
-dft.full_path  # Absolute path to the input directory or ZIP archive
-dft.full_data_path  # Absolute path combined with subpath
-dft.full_local_dir  # Absolute cache directory
-dft.full_cache_path  # Absolute cache file path
-```
+## Documentation
 
-`str(dft)` provides a readable summary, while `repr(dft)` provides a compact
-developer-oriented representation.
+Documentation is currently under development.
 
-## Development
+The full documentation will be hosted on **Read the Docs** once the package reaches a more stable stage.
 
-Run the test suite with:
+## Development status
 
-```bash
-python -m unittest discover
-```
+pyVASPlot is currently under **heavy development**.
 
-The test data is stored under `tests/data`.
+The API should be considered **unstable**, and breaking changes may occur without following a strict backwards-compatibility policy.
+
+Contributions, bug reports, and suggestions are welcome.
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE).
+This project is licensed under the **MIT License**. See the [`LICENSE`](LICENSE) file for details.
