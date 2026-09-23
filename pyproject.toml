@@ -1,48 +1,59 @@
-
 [project]
 name = "pyvasplot"
-authors = [
-  { name="Marek Kopciuszynski", email="marek.Kopciuszynski@umcs.pl" },
-]
-description = "WASP data visualization tools"
+dynamic = ["version"]
+
+description = "Python toolkit for VASP electronic-structure analysis and visualization."
+
 readme = "README.md"
 requires-python = ">=3.12"
+
+authors = [
+    { name = "Marek Kopciuszynski", email = "Marek.Kopciuszynski@umcs.pl" },
+]
+
 license = "MIT"
 license-files = ["LICENSE"]
+
 classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Physics",
-    "Intended Audience :: Science/Research",
 ]
 
 dependencies = [
-    "numpy>=1.21.0",
+    "numpy>=1.21",
     "pymatgen>=2026.5.4",
-    "matplotlib>=3.4.2",
+    "matplotlib>=3.4",
     "dill>=0.3.4",
-    "tqdm>=4.60.0",
+    "tqdm>=4.60",
 ]
 
-dynamic = ["version"]
+[project.urls]
+Homepage = "https://github.com/mkopciuszynski/pyvasplot"
+Repository = "https://github.com/mkopciuszynski/pyvasplot"
+Issues = "https://github.com/mkopciuszynski/pyvasplot/issues"
+
+
+[project.optional-dependencies]
+dev = [
+    "build",
+    "pytest",
+    "ruff",
+]
 
 [build-system]
 requires = [
     "setuptools>=61",
-    "wheel",
-    "build",
-    "setuptools_scm[toml]>=6.4"
+    "setuptools-scm>=8",
 ]
 build-backend = "setuptools.build_meta"
-
-[project.optional-dependencies]
-dev = [
-    "ruff",
-    "pytest",
-    "build",
-]
 
 [tool.setuptools_scm]
 version_scheme = "post-release"

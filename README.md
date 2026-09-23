@@ -1,6 +1,16 @@
 # pyVASPlot
 
-Python tools for analyzing and visualizing VASP electronic-structure data, including projection maps for comparison with ARPES experiments.
+📡 ** Python toolkit for VASP electronic-structure analysis and visualization. **
+
+---
+
+[![CI](https://github.com/mkopciuszynski/xrheed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mkopciuszynski/xrheed/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Linter: ruff](https://img.shields.io/badge/linter-ruff-46a2f1.svg?logo=ruff)](https://github.com/astral-sh/ruff)
+[![Package manager: uv](https://img.shields.io/badge/packaging-uv-blue)](https://github.com/astral-sh/uv)
+
+---
+
 
 > **⚠️ Work in progress**
 >
