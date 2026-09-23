@@ -126,7 +126,7 @@ def orbital_indices_for(
 ) -> tuple[int, ...]:
     """Convert selected orbital names into PROCAR orbital indices."""
     if selection is None:
-        return tuple(list(range(len(orbitals))))
+        return tuple(range(len(orbitals)))
 
     if isinstance(selection, str):
         selected = [selection]
@@ -134,6 +134,6 @@ def orbital_indices_for(
         selected = list(selection)
 
     if not selected:
-        return tuple(list(range(len(orbitals))))
+        return tuple(range(len(orbitals)))
 
     return tuple([orbitals.index(orbital) for orbital in selected])

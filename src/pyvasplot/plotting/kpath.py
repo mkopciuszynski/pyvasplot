@@ -197,28 +197,6 @@ def _get_kpath_sections(
             for section in range(n_sections)
         ]
 
-    # The usual case is that repeated boundary points have been
-    # removed. There are n_sections - 1 internal boundaries, and
-    # sometimes an additional repeated point is removed at the end
-    # or beginning depending on the parser.
-    #
-    # Start with the ideal section boundaries.
-    boundaries = [section * points_per_section for section in range(n_sections + 1)]
-
-    # Distribute removed points across the path boundaries.
-    #
-    # For the common case:
-    #
-    #     96 requested
-    #     93 parsed
-    #
-    # the parser removed three points. We therefore progressively
-    # shift later sections left.
-    #
-    # We identify the actual boundary positions from the PROCAR
-    # sequence whenever possible, without requiring an exact match
-    # to the KPOINTS coordinates.
-
     sections: list[tuple[int, int]] = []
 
     # Build approximately equal sections first.
