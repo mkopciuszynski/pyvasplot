@@ -35,6 +35,9 @@ class TestPlot(unittest.TestCase):
     def test_plot_structure(self):
         axes = plot_structure(self.dft)
 
+        if not isinstance(axes, list):
+            self.fail("plot_structure() did not return a list of axes")
+
         self.assertEqual(len(axes), 3)
 
         axes[0].figure.clf()
