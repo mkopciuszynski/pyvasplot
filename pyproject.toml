@@ -5,6 +5,7 @@ dynamic = ["version"]
 description = "Python toolkit for VASP electronic-structure analysis and visualization."
 
 readme = "README.md"
+
 requires-python = ">=3.12"
 
 authors = [
@@ -15,14 +16,16 @@ license = "MIT"
 license-files = ["LICENSE"]
 
 classifiers = [
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Physics",
 ]
@@ -33,15 +36,12 @@ dependencies = [
     "matplotlib>=3.4",
     "dill>=0.3.4",
     "tqdm>=4.60",
+    "ase>=3.26",
 ]
-
-[project.urls]
-Homepage = "https://github.com/mkopciuszynski/pyvasplot"
-Repository = "https://github.com/mkopciuszynski/pyvasplot"
-Issues = "https://github.com/mkopciuszynski/pyvasplot/issues"
 
 
 [project.optional-dependencies]
+
 dev = [
     "build",
     "pytest",
@@ -50,11 +50,20 @@ dev = [
 
 [build-system]
 requires = [
-    "setuptools>=61",
+    "setuptools>=77",
     "setuptools-scm>=8",
 ]
 build-backend = "setuptools.build_meta"
 
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+
 [tool.setuptools_scm]
 version_scheme = "post-release"
 local_scheme = "dirty-tag"
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
