@@ -27,6 +27,7 @@ dist/
 .eggs/
 *.manifest
 MANIFEST
+docs/_build/
 
 # Test, coverage, and lint output
 .pytest_cache/
