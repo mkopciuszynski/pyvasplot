@@ -130,6 +130,17 @@ The API should be considered **unstable**, and breaking changes may occur withou
 
 Contributions, bug reports, and suggestions are welcome.
 
+## Dependencies and acknowledgements
+
+`pyVASPlot` builds heavily on several excellent open-source scientific Python packages:
+
+* **[pymatgen](https://pymatgen.org/)** — VASP file parsing and electronic-structure data handling
+* **[ASE](https://wiki.fysik.dtu.dk/ase/)** — atomic structures and structure visualization
+* **[NumPy](https://numpy.org/)** — numerical data processing and array operations
+* **[Matplotlib](https://matplotlib.org/)** — plotting and visualization
+
+We are grateful to the developers and contributors of these projects for making their software available to the scientific community. Please see the respective projects for their licensing information and citation guidelines.
+
 ## License
 
 This project is licensed under the **MIT License**. See the [`LICENSE`](LICENSE) file for details.
