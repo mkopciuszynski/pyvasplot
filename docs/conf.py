@@ -1,8 +1,8 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 project = "pyVASPlot"
 author = "Marek Kopciuszynski"
-year = datetime.now().year
+year = datetime.now(UTC).year
 copyright = f"{year}, {author}"
 
 
