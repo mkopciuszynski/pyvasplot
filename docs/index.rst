@@ -63,14 +63,14 @@ Contents
    examples/getting_started
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :titlesonly:
    :caption: API Reference
 
    api
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Development
 
    changelog

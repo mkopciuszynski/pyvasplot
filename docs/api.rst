@@ -1,21 +1,18 @@
 pyvasplot
 =========
 
-PyVASP
-------
-
-.. autoclass:: pyvasplot.PyVASP
+.. automodule:: pyvasplot
    :members:
+   :undoc-members:
+   :show-inheritance:
 
-Plotting
---------
+Submodules
+----------
 
-.. automodule:: pyvasplot.plotting
-   :members:
-
-Selection
----------
-
-.. automodule:: pyvasplot.select
-   :members:
+.. autosummary::
+   :toctree: generated
+   :recursive:
    
+   plotting
+   select
+

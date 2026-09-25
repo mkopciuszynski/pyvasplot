@@ -27,7 +27,6 @@ dist/
 .eggs/
 *.manifest
 MANIFEST
-docs/_build/
 
 # Test, coverage, and lint output
 .pytest_cache/
@@ -54,5 +53,7 @@ tests/dft_data/
 Thumbs.db
 .vscode
 
-# Generated pyVASPlot documentation cache
+# Sphinx documentation
 docs/examples/dft_local/
+docs/generated/
+docs/_build/
