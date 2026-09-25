@@ -1,6 +1,5 @@
-# pyVASPlot
-
-**Python toolkit for VASP electronic-structure analysis and visualization.**
+pyVASPlot
+=========
 
 .. image:: https://github.com/mkopciuszynski/pyvasplot/actions/workflows/ci.yml/badge.svg?branch=main
 	:target: https://github.com/mkopciuszynski/pyvasplot/actions/workflows/ci.yml
@@ -26,29 +25,53 @@
 	:target: https://github.com/astral-sh/uv
 	:alt: uv
 
+Welcome to pyVASPlot documentation!
+
+pyVASPlot provides tools for analyzing and visualizing electronic-structure data
+produced by VASP. It is designed to make common analysis workflows easier to
+reproduce, automate, and customize.
+
 
 .. note::
 
-	pyVASPlot is under active development and the API may change.
+	pyVASPlot is under active development, and its API may change between
+	releases. The documentation is also under development and will evolve as
+	the package grows.
+
+Features
+--------
+
+* VASP electronic-structure analysis
+* Publication-quality visualization
+* Python-based and scriptable workflows
+* API documentation and examples
+* Modern Python tooling with Ruff and uv
 
 Contents
 --------
 
 .. toctree::
-	:maxdepth: 2
-	:caption: Examples
+   :maxdepth: 2
+   :caption: User Guide
 
-	examples/getting_started
+   introduction
 
 .. toctree::
-	:maxdepth: 2
-	:caption: Reference
+   :maxdepth: 2
+   :caption: Examples
 
-	api
+   examples/getting_started
 
-Indices and tables
-------------------
+.. toctree::
+   :maxdepth: 3
+   :titlesonly:
+   :caption: API Reference
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   api
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Development
+
+   changelog
+   contributing

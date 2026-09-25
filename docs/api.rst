@@ -1,5 +1,5 @@
-API reference
-=============
+pyvasplot
+=========
 
 PyVASP
 ------
@@ -18,3 +18,4 @@ Selection
 
 .. automodule:: pyvasplot.select
    :members:
+   

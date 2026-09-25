@@ -122,6 +122,10 @@ The documentation is available on [Read the Docs](https://pyvasplot.readthedocs.
 
 <https://pyvasplot.readthedocs.io/>
 
+## Contributing
+
+Contributions are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow, test commands, and pull request guidelines.
+
 ## Development status
 
 pyVASPlot is currently under **heavy development**.
