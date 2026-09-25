@@ -1,1 +1,3 @@
 *.zip binary
+# Strip Jupyter notebook outputs before committing
+*.ipynb filter=nbstripout
