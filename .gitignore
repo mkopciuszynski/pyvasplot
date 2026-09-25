@@ -53,3 +53,6 @@ tests/dft_data/
 .DS_Store
 Thumbs.db
 .vscode
+
+# Generated pyVASPlot documentation cache
+docs/examples/dft_local/
