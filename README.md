@@ -118,9 +118,9 @@ More examples and detailed documentation will be added as the package develops.
 
 ## Documentation
 
-Documentation is currently under development.
+The documentation is available on [Read the Docs](https://pyvasplot.readthedocs.io/):
 
-The full documentation will be hosted on **Read the Docs** once the package reaches a more stable stage.
+<https://pyvasplot.readthedocs.io/>
 
 ## Development status
 
