@@ -49,6 +49,7 @@ dev = [
 docs = [
     "sphinx",
     "sphinx-rtd-theme",
+    "myst-nb",
 ]
 
 [build-system]

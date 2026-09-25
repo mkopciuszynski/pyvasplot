@@ -13,9 +13,9 @@ Contents
 
 .. toctree::
    :maxdepth: 2
-   :caption: User guide
+   :caption: Examples
 
-   quickstart
+   examples/getting_started
 
 .. toctree::
    :maxdepth: 2
