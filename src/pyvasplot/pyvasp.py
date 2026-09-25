@@ -16,19 +16,19 @@ class PyVASP:
         path: str | Path,
         name: str | None = None,
         calculation_type: CalculationType | str | None = None,
-        subpath: str | Path | None = None,
+        sub_path: str | Path | None = None,
         local_dir: str | Path = "dft_local",
     ) -> None:
         self.path = Path(path)
-        self.subpath = Path(subpath) if subpath is not None else None
+        self.sub_path = Path(sub_path) if sub_path is not None else None
 
         self.name = name or _generate_name(
             str(path),
-            str(subpath) if subpath is not None else None,
+            str(sub_path) if sub_path is not None else None,
         )
 
         if calculation_type is None:
-            calculation_type = infer_calculation_type(self.subpath or self.path)
+            calculation_type = infer_calculation_type(self.sub_path or self.path)
 
         self.calculation_type = (
             CalculationType(calculation_type) if calculation_type is not None else None
@@ -59,7 +59,7 @@ class PyVASP:
             path=self.path,
             calculation_type=self.calculation_type,
             cache_path=self.cache_path,
-            subpath=self.subpath,
+            sub_path=self.sub_path,
             reload=reload,
             show_progress=show_progress,
         )
@@ -94,10 +94,10 @@ class PyVASP:
     @property
     def full_data_path(self) -> Path:
         """Absolute path to the calculation, including its subpath."""
-        if self.subpath is None:
+        if self.sub_path is None:
             return self.full_path
 
-        return (self.full_path / self.subpath).resolve()
+        return (self.full_path / self.sub_path).resolve()
 
     @property
     def full_local_dir(self) -> Path:

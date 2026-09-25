@@ -165,7 +165,7 @@ class TestPyVASP(unittest.TestCase):
 
         dft = PyVASP(
             self.test_data_zip,
-            subpath="BS_MGKM",
+            sub_path="BS_MGKM",
             calculation_type="BS_KPATH",
             local_dir=self.cache_dir,
         )
@@ -179,7 +179,7 @@ class TestPyVASP(unittest.TestCase):
 
         dft = PyVASP(
             self.test_data_AuSi_zip,
-            subpath="BS_BZ",
+            sub_path="BS_BZ",
             calculation_type="KXKY",
             local_dir=self.cache_dir,
         )
@@ -221,7 +221,7 @@ class TestPyVASP(unittest.TestCase):
 
         dft = PyVASP(
             self.test_data_zip,
-            subpath="SO_STATIC/BS_MGKM",
+            sub_path="SO_STATIC/BS_MGKM",
             calculation_type="SO_STATIC_KPATH",
             local_dir=self.cache_dir,
         )
@@ -238,7 +238,7 @@ class TestPyVASP(unittest.TestCase):
 
         dft = PyVASP(
             self.test_data_zip,
-            subpath="BS_MGKM",
+            sub_path="BS_MGKM",
             calculation_type="BS_KPATH",
             local_dir=self.cache_dir,
         )
@@ -249,7 +249,7 @@ class TestPyVASP(unittest.TestCase):
 
         cached_dft = PyVASP(
             self.test_data_zip,
-            subpath="BS_MGKM",
+            sub_path="BS_MGKM",
             calculation_type="BS_KPATH",
             local_dir=self.cache_dir,
         )
@@ -263,7 +263,7 @@ class TestPyVASP(unittest.TestCase):
 
         dft = PyVASP(
             self.test_data_zip,
-            subpath="BS_MGKM",
+            sub_path="BS_MGKM",
             calculation_type="BS_KPATH",
             local_dir=self.cache_dir,
         )
@@ -297,7 +297,7 @@ class TestPyVASP(unittest.TestCase):
 
         dft = PyVASP(
             self.test_data_zip,
-            subpath="does_not_exist",
+            sub_path="does_not_exist",
             calculation_type="BS_KPATH",
             local_dir=self.cache_dir,
         )
@@ -311,7 +311,7 @@ class TestPyVASP(unittest.TestCase):
         with self.assertRaises(ValueError):
             PyVASP(
                 self.test_data_zip,
-                subpath="BS_MGKM",
+                sub_path="BS_MGKM",
                 calculation_type="invalid",
                 local_dir=self.cache_dir,
             )

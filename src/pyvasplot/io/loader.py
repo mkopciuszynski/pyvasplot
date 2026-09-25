@@ -14,7 +14,7 @@ def load(
     path: str | Path,
     calculation_type: CalculationType,
     cache_path: Path,
-    subpath: str | Path | None = None,
+    sub_path: str | Path | None = None,
     reload: bool = False,
     show_progress: bool = False,
 ) -> VASPData:
@@ -23,7 +23,7 @@ def load(
     if not reload and cache_path.exists():
         return _load_cache(cache_path)
 
-    with DataSource(path, subpath=subpath) as calculation_path:
+    with DataSource(path, subpath=sub_path) as calculation_path:
         data = _load_calculation(
             calculation_path,
             calculation_type,

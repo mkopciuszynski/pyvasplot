@@ -41,7 +41,7 @@ class TestProjections(unittest.TestCase):
 
         self.dft = PyVASP(
             MODEL_DIR,
-            subpath="BS_001",
+            sub_path="BS_001",
             calculation_type="BS",
             local_dir=self.cache_dir,
         )

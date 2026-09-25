@@ -24,7 +24,7 @@ class TestPlot(unittest.TestCase):
         self.dft = PyVASP(
             self.test_data_dir,
             calculation_type="BS_KPATH",
-            subpath="BS_MGKM",
+            sub_path="BS_MGKM",
             local_dir=self.cache_dir,
         )
         self.dft.load(reload=True)
