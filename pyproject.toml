@@ -70,3 +70,9 @@ local_scheme = "dirty-tag"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+exclude = [
+    "*.ipynb",
+]
