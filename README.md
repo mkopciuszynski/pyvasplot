@@ -4,9 +4,12 @@
 
 ---
 [![CI](https://github.com/mkopciuszynski/pyvasplot/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mkopciuszynski/pyvasplot/actions/workflows/ci.yml)
+[![Documentation Status](https://readthedocs.org/projects/pyvasplot/badge/?version=latest)](https://pyvasplot.readthedocs.io/en/latest/)
+[![PyPI](https://img.shields.io/pypi/v/pyvasplot.svg)](https://pypi.org/project/pyvasplot/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Linter: ruff](https://img.shields.io/badge/linter-ruff-46a2f1.svg?logo=ruff)](https://github.com/astral-sh/ruff)
 [![Package manager: uv](https://img.shields.io/badge/packaging-uv-blue)](https://github.com/astral-sh/uv)
+
 ---
 
 > **⚠️ Work in progress**
