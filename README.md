@@ -9,6 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Linter: ruff](https://img.shields.io/badge/linter-ruff-46a2f1.svg?logo=ruff)](https://github.com/astral-sh/ruff)
 [![Package manager: uv](https://img.shields.io/badge/packaging-uv-blue)](https://github.com/astral-sh/uv)
+[![DOI](https://zenodo.org/badge/700856998.svg)](https://doi.org/10.5281/zenodo.23238867)
 
 ---
 
