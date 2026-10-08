@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: If you use pyVASPlot, please cite it using the metadata below.
+title: pyVASPlot
+authors:
+  - family-names: Kopciuszyński
+    given-names: Marek
+version: 0.4.0
+date-released: 2026-10-08
+doi: 10.5281/zenodo.23238867
+url: https://github.com/mkopciuszynski/pyvasplot
+license: MIT

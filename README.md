@@ -123,6 +123,11 @@ The documentation is available on [Read the Docs](https://pyvasplot.readthedocs.
 
 <https://pyvasplot.readthedocs.io/>
 
+## Citing
+
+If you use pyVASPlot in your work, please cite it using the metadata in
+[`CITATION.cff`](CITATION.cff).
+
 ## Contributing
 
 Contributions are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow, test commands, and pull request guidelines.
