@@ -25,6 +25,10 @@ pyVASPlot
 	:target: https://github.com/astral-sh/uv
 	:alt: uv
 
+.. image:: https://zenodo.org/badge/700856998.svg
+    :target: https://doi.org/10.5281/zenodo.23238867
+    :alt: zenodo
+
 Welcome to pyVASPlot documentation!
 
 pyVASPlot provides tools for analyzing and visualizing electronic-structure data
